@@ -12,5 +12,26 @@ export default {
     extend: {},
   },
   darkMode: ["class"],
-  plugins: [nextui()],
+  plugins: [
+    nextui({
+      layout: {
+        disabledOpacity: "0.2",
+        radius: {
+          small: "2px",
+          medium: "6px",
+          large: "6px",
+        },
+      },
+      prefix: "vitalUI",
+      defaultTheme: "dark",
+      themes: {
+        light: {
+          primary: "#247EE5",
+        },
+        dark: {
+          primary: "#247EE5",
+        },
+      },
+    }),
+  ],
 };
