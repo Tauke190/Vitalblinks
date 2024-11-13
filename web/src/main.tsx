@@ -8,12 +8,12 @@ import "./App.css"; // for tailwindcss
 
 // importing router definitions
 import { routeTree } from "./routeTree.gen.ts"
-import DefaultRoute404Com from './components/404.tsx';
+import DefaultRoute404Comp from './components/404.tsx';
 
 const router = createRouter({
     routeTree,
     notFoundMode: "fuzzy",
-    defaultNotFoundComponent: (props) => <DefaultRoute404Com {...props} />
+    defaultNotFoundComponent: (props) => <DefaultRoute404Comp {...props} />
 });
 
 declare module "@tanstack/react-router" {

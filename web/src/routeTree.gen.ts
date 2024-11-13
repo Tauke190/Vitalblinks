@@ -16,8 +16,10 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
 import { Route as AuthIndexImport } from './routes/auth/index'
 import { Route as AuthRegisterImport } from './routes/auth/register'
-import { Route as AuthLoginImport } from './routes/auth/login'
 import { Route as AuthLayoutImport } from './routes/auth/_layout'
+import { Route as AuthLoginIndexImport } from './routes/auth/login/index'
+import { Route as AuthLoginForgotPasswordIndexImport } from './routes/auth/login/forgot-password/index'
+import { Route as AuthLoginForgotPasswordVerifyImport } from './routes/auth/login/forgot-password/verify'
 
 // Create Virtual Routes
 
@@ -49,16 +51,30 @@ const AuthRegisterRoute = AuthRegisterImport.update({
   getParentRoute: () => AuthRoute,
 } as any)
 
-const AuthLoginRoute = AuthLoginImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => AuthRoute,
-} as any)
-
 const AuthLayoutRoute = AuthLayoutImport.update({
   id: '/_layout',
   getParentRoute: () => AuthRoute,
 } as any)
+
+const AuthLoginIndexRoute = AuthLoginIndexImport.update({
+  id: '/login/',
+  path: '/login/',
+  getParentRoute: () => AuthRoute,
+} as any)
+
+const AuthLoginForgotPasswordIndexRoute =
+  AuthLoginForgotPasswordIndexImport.update({
+    id: '/login/forgot-password/',
+    path: '/login/forgot-password/',
+    getParentRoute: () => AuthRoute,
+  } as any)
+
+const AuthLoginForgotPasswordVerifyRoute =
+  AuthLoginForgotPasswordVerifyImport.update({
+    id: '/login/forgot-password/verify',
+    path: '/login/forgot-password/verify',
+    getParentRoute: () => AuthRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -85,13 +101,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLayoutImport
       parentRoute: typeof AuthRoute
     }
-    '/auth/login': {
-      id: '/auth/login'
-      path: '/login'
-      fullPath: '/auth/login'
-      preLoaderRoute: typeof AuthLoginImport
-      parentRoute: typeof AuthImport
-    }
     '/auth/register': {
       id: '/auth/register'
       path: '/register'
@@ -106,6 +115,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthIndexImport
       parentRoute: typeof AuthImport
     }
+    '/auth/login/': {
+      id: '/auth/login/'
+      path: '/login'
+      fullPath: '/auth/login'
+      preLoaderRoute: typeof AuthLoginIndexImport
+      parentRoute: typeof AuthImport
+    }
+    '/auth/login/forgot-password/verify': {
+      id: '/auth/login/forgot-password/verify'
+      path: '/login/forgot-password/verify'
+      fullPath: '/auth/login/forgot-password/verify'
+      preLoaderRoute: typeof AuthLoginForgotPasswordVerifyImport
+      parentRoute: typeof AuthImport
+    }
+    '/auth/login/forgot-password/': {
+      id: '/auth/login/forgot-password/'
+      path: '/login/forgot-password'
+      fullPath: '/auth/login/forgot-password'
+      preLoaderRoute: typeof AuthLoginForgotPasswordIndexImport
+      parentRoute: typeof AuthImport
+    }
   }
 }
 
@@ -113,16 +143,20 @@ declare module '@tanstack/react-router' {
 
 interface AuthRouteChildren {
   AuthLayoutRoute: typeof AuthLayoutRoute
-  AuthLoginRoute: typeof AuthLoginRoute
   AuthRegisterRoute: typeof AuthRegisterRoute
   AuthIndexRoute: typeof AuthIndexRoute
+  AuthLoginIndexRoute: typeof AuthLoginIndexRoute
+  AuthLoginForgotPasswordVerifyRoute: typeof AuthLoginForgotPasswordVerifyRoute
+  AuthLoginForgotPasswordIndexRoute: typeof AuthLoginForgotPasswordIndexRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
   AuthLayoutRoute: AuthLayoutRoute,
-  AuthLoginRoute: AuthLoginRoute,
   AuthRegisterRoute: AuthRegisterRoute,
   AuthIndexRoute: AuthIndexRoute,
+  AuthLoginIndexRoute: AuthLoginIndexRoute,
+  AuthLoginForgotPasswordVerifyRoute: AuthLoginForgotPasswordVerifyRoute,
+  AuthLoginForgotPasswordIndexRoute: AuthLoginForgotPasswordIndexRoute,
 }
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
@@ -130,16 +164,20 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthLayoutRoute
-  '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/auth/': typeof AuthIndexRoute
+  '/auth/login': typeof AuthLoginIndexRoute
+  '/auth/login/forgot-password/verify': typeof AuthLoginForgotPasswordVerifyRoute
+  '/auth/login/forgot-password': typeof AuthLoginForgotPasswordIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthIndexRoute
-  '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/auth/login': typeof AuthLoginIndexRoute
+  '/auth/login/forgot-password/verify': typeof AuthLoginForgotPasswordVerifyRoute
+  '/auth/login/forgot-password': typeof AuthLoginForgotPasswordIndexRoute
 }
 
 export interface FileRoutesById {
@@ -147,24 +185,41 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
   '/auth/_layout': typeof AuthLayoutRoute
-  '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/auth/': typeof AuthIndexRoute
+  '/auth/login/': typeof AuthLoginIndexRoute
+  '/auth/login/forgot-password/verify': typeof AuthLoginForgotPasswordVerifyRoute
+  '/auth/login/forgot-password/': typeof AuthLoginForgotPasswordIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/auth/login' | '/auth/register' | '/auth/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/auth/register'
+    | '/auth/'
+    | '/auth/login'
+    | '/auth/login/forgot-password/verify'
+    | '/auth/login/forgot-password'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/auth/login' | '/auth/register'
+  to:
+    | '/'
+    | '/auth'
+    | '/auth/register'
+    | '/auth/login'
+    | '/auth/login/forgot-password/verify'
+    | '/auth/login/forgot-password'
   id:
     | '__root__'
     | '/'
     | '/auth'
     | '/auth/_layout'
-    | '/auth/login'
     | '/auth/register'
     | '/auth/'
+    | '/auth/login/'
+    | '/auth/login/forgot-password/verify'
+    | '/auth/login/forgot-password/'
   fileRoutesById: FileRoutesById
 }
 
@@ -199,17 +254,15 @@ export const routeTree = rootRoute
       "filePath": "auth",
       "children": [
         "/auth/_layout",
-        "/auth/login",
         "/auth/register",
-        "/auth/"
+        "/auth/",
+        "/auth/login/",
+        "/auth/login/forgot-password/verify",
+        "/auth/login/forgot-password/"
       ]
     },
     "/auth/_layout": {
       "filePath": "auth/_layout.tsx",
-      "parent": "/auth"
-    },
-    "/auth/login": {
-      "filePath": "auth/login.tsx",
       "parent": "/auth"
     },
     "/auth/register": {
@@ -218,6 +271,18 @@ export const routeTree = rootRoute
     },
     "/auth/": {
       "filePath": "auth/index.tsx",
+      "parent": "/auth"
+    },
+    "/auth/login/": {
+      "filePath": "auth/login/index.tsx",
+      "parent": "/auth"
+    },
+    "/auth/login/forgot-password/verify": {
+      "filePath": "auth/login/forgot-password/verify.tsx",
+      "parent": "/auth"
+    },
+    "/auth/login/forgot-password/": {
+      "filePath": "auth/login/forgot-password/index.tsx",
       "parent": "/auth"
     }
   }

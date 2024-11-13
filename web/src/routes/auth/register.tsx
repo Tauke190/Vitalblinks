@@ -50,7 +50,6 @@ function RouteComponent() {
         <div className="rememberForget flex items-center justify-between mt-5">
             <Tooltip
                 placement='right'
-                contextMenu='hello'
                 delay={200}
                 content={
                     <div>
