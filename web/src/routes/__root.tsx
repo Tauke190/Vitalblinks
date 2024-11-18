@@ -11,7 +11,7 @@ const MainLayout = () => {
 
 export const Route = createRootRoute({
     component: () => {
-        const auth = false;
+        const auth = true;
 
         if (auth)
             return <MainLayout />

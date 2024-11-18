@@ -18,6 +18,7 @@ import { Route as AuthIndexImport } from './routes/auth/index'
 import { Route as AuthRegisterImport } from './routes/auth/register'
 import { Route as AuthLayoutImport } from './routes/auth/_layout'
 import { Route as AuthLoginIndexImport } from './routes/auth/login/index'
+import { Route as VitalUserIdMapImport } from './routes/vital/$userId/map'
 import { Route as AuthLoginForgotPasswordIndexImport } from './routes/auth/login/forgot-password/index'
 import { Route as AuthLoginForgotPasswordVerifyImport } from './routes/auth/login/forgot-password/verify'
 
@@ -60,6 +61,12 @@ const AuthLoginIndexRoute = AuthLoginIndexImport.update({
   id: '/login/',
   path: '/login/',
   getParentRoute: () => AuthRoute,
+} as any)
+
+const VitalUserIdMapRoute = VitalUserIdMapImport.update({
+  id: '/vital/$userId/map',
+  path: '/vital/$userId/map',
+  getParentRoute: () => rootRoute,
 } as any)
 
 const AuthLoginForgotPasswordIndexRoute =
@@ -115,6 +122,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthIndexImport
       parentRoute: typeof AuthImport
     }
+    '/vital/$userId/map': {
+      id: '/vital/$userId/map'
+      path: '/vital/$userId/map'
+      fullPath: '/vital/$userId/map'
+      preLoaderRoute: typeof VitalUserIdMapImport
+      parentRoute: typeof rootRoute
+    }
     '/auth/login/': {
       id: '/auth/login/'
       path: '/login'
@@ -166,6 +180,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthLayoutRoute
   '/auth/register': typeof AuthRegisterRoute
   '/auth/': typeof AuthIndexRoute
+  '/vital/$userId/map': typeof VitalUserIdMapRoute
   '/auth/login': typeof AuthLoginIndexRoute
   '/auth/login/forgot-password/verify': typeof AuthLoginForgotPasswordVerifyRoute
   '/auth/login/forgot-password': typeof AuthLoginForgotPasswordIndexRoute
@@ -175,6 +190,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthIndexRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/vital/$userId/map': typeof VitalUserIdMapRoute
   '/auth/login': typeof AuthLoginIndexRoute
   '/auth/login/forgot-password/verify': typeof AuthLoginForgotPasswordVerifyRoute
   '/auth/login/forgot-password': typeof AuthLoginForgotPasswordIndexRoute
@@ -187,6 +203,7 @@ export interface FileRoutesById {
   '/auth/_layout': typeof AuthLayoutRoute
   '/auth/register': typeof AuthRegisterRoute
   '/auth/': typeof AuthIndexRoute
+  '/vital/$userId/map': typeof VitalUserIdMapRoute
   '/auth/login/': typeof AuthLoginIndexRoute
   '/auth/login/forgot-password/verify': typeof AuthLoginForgotPasswordVerifyRoute
   '/auth/login/forgot-password/': typeof AuthLoginForgotPasswordIndexRoute
@@ -199,6 +216,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/auth/register'
     | '/auth/'
+    | '/vital/$userId/map'
     | '/auth/login'
     | '/auth/login/forgot-password/verify'
     | '/auth/login/forgot-password'
@@ -207,6 +225,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/auth/register'
+    | '/vital/$userId/map'
     | '/auth/login'
     | '/auth/login/forgot-password/verify'
     | '/auth/login/forgot-password'
@@ -217,6 +236,7 @@ export interface FileRouteTypes {
     | '/auth/_layout'
     | '/auth/register'
     | '/auth/'
+    | '/vital/$userId/map'
     | '/auth/login/'
     | '/auth/login/forgot-password/verify'
     | '/auth/login/forgot-password/'
@@ -226,11 +246,13 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRouteWithChildren
+  VitalUserIdMapRoute: typeof VitalUserIdMapRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRouteWithChildren,
+  VitalUserIdMapRoute: VitalUserIdMapRoute,
 }
 
 export const routeTree = rootRoute
@@ -244,7 +266,8 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/auth"
+        "/auth",
+        "/vital/$userId/map"
       ]
     },
     "/": {
@@ -272,6 +295,9 @@ export const routeTree = rootRoute
     "/auth/": {
       "filePath": "auth/index.tsx",
       "parent": "/auth"
+    },
+    "/vital/$userId/map": {
+      "filePath": "vital/$userId/map.tsx"
     },
     "/auth/login/": {
       "filePath": "auth/login/index.tsx",
