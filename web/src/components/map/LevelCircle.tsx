@@ -1,15 +1,24 @@
+import { Marker } from "react-leaflet";
 import { LEVELS, tgameLevel } from "../../data/levels";
 import { useGameState } from "../../hooks/useGameState";
+import { divIcon } from "leaflet";
+import { renderToStaticMarkup } from "react-dom/server"
 
 const Levels = () => {
     return (
         <> {
             Object.entries(LEVELS).map(([level, levelData], index) => {
-                return < LevelsCircle
-                    {...levelData}
-                    key={`${level}-${index}`}
+                const circleIcon = <LevelsCircle
                     level={Number(level) as keyof typeof LEVELS}
-                />
+                    {...levelData}
+                />;
+
+                return (
+                    <Marker
+                        key={`${level}-${index}`}
+                        icon={divIcon({ html: renderToStaticMarkup(circleIcon) })}
+                        position={levelData.location}
+                    />)
             })
         } </>
     )
@@ -20,7 +29,7 @@ type tlevelsCirlce = tgameLevel[number]
 
 /**
  * Displays a level circle based on the current level.
- * @param {tlevelsCirlce}
+ * @param props {tlevelsCirlce}
  */
 const LevelsCircle = (props: tlevelsCirlce) => {
     const { level = 1 } = props;
@@ -29,7 +38,7 @@ const LevelsCircle = (props: tlevelsCirlce) => {
     const isPassed = level < currentLevel.level;
     const isCurrentLevel = level === currentLevel.level;
 
-    return <div>
+    return <div className="w-5 h-5 bg-green-300">
         {props.name}
     </div>
 }
