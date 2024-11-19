@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
-import Map from '../../../components/map/Map'
+import GameMap from '../../../components/map/Map'
+import Levels from '../../../components/map/LevelCircle'
 
 export const Route = createFileRoute('/vital/$userId/map')({
     component: MapPage,
@@ -7,6 +8,8 @@ export const Route = createFileRoute('/vital/$userId/map')({
 
 function MapPage() {
     return <main>
-        <Map />
+        <GameMap>
+            <Levels />
+        </GameMap>
     </main>
 }

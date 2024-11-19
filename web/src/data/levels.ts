@@ -1,57 +1,26 @@
-export type tlocation = {
-    lat: number,
-    long: number,
-};
+import { latLng, LatLng } from "leaflet";
+
+export type tlocation = LatLng;
 
 // for now they follow a random tragectory, which will later be mapped to location in the game map.
 export const LEVELS_TO_LOCATION_MAP: Record<number, tlocation> = {
-    1: {
-        lat: -6.201103985567785,
-        long: 106.83000879116756
-    },
-    2: {
-        lat: 1.3301960280623573,
-        long: 103.74931860800882
-    },
-    3: {
-        lat: 10.772207548037004,
-        long: 106.27617424174164
-    },
-    4: {
-        lat: 15.393719995590693,
-        long: 99.68437691859054
-    },
-    5: {
-        lat: 20.82121634598981,
-        long: 102.40898647882632
-    },
-    6: {
-        lat: 21.086433117593177,
-        long: 96.12044630055821
-    },
-    7: {
-        lat: 28.538094418611227,
-        long: 100.82259457206862
-    },
-    8: {
-        lat: 25.00785011718272,
-        long: 90.71517305386871
-    },
-    9: {
-        lat: 30.866288381136876,
-        long: 89.39681372540785
-    },
-    10: {
-        lat: 28.267506954562734,
-        long: 83.85970454587223
-    },
-} as const;
+    1: latLng(-6.201103985567785, 106.83000879116756),
+    2: latLng(1.3301960280623573, 103.74931860800882),
+    3: latLng(10.772207548037004, 106.27617424174164),
+    4: latLng(15.393719995590693, 99.68437691859054),
+    5: latLng(20.82121634598981, 102.40898647882632),
+    6: latLng(21.086433117593177, 96.12044630055821),
+    7: latLng(28.538094418611227, 100.82259457206862),
+    8: latLng(25.00785011718272, 90.71517305386871),
+    9: latLng(30.866288381136876, 89.39681372540785),
+    10: latLng(28.267506954562734, 83.85970454587223),
+};
 
-export type tgameLevels = {
+export type tgameLevel = Record<number, {
     name: string,
     description: string,
     location: tlocation,
-}
+}>
 
 export const LEVELS = Object.freeze({
     1: {

@@ -1,19 +1,34 @@
-import { ReactNode } from "@tanstack/react-router";
+import { ReactNode } from "react";
 import {
     MapContainer,
     TileLayer
 } from "react-leaflet";
 
+// importing default react leaflet mandetory stylesheet
+import 'leaflet/dist/leaflet.css';
+
+import { useGameState } from "../../hooks/useGameState";
+
 type gameMapProps = {
-    children: ReactNode;
+    children?: ReactNode;
 }
 
 const GameMap = ({ children }: gameMapProps) => {
+    const { currentLevel } = useGameState();
+
+    if (!currentLevel)
+        return;
+
     return (
-        <MapContainer center={[51.505, -0.09]} zoom={13} scrollWheelZoom={false}>
+        <MapContainer
+            zoom={7}
+            center={currentLevel.location}
+            scrollWheelZoom={true}
+            style={{ height: "100vh", width: "100vw" }}
+        >
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             {children}
         </MapContainer>
