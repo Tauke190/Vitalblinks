@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/*
+ * Resetting the markers styles.
+ * */
+.leaflet-marker-icon {
+    height: 0px !important;
+}

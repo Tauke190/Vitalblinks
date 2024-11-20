@@ -22,6 +22,8 @@ const GameMap = ({ children }: gameMapProps) => {
     return (
         <MapContainer
             zoom={7}
+            maxZoom={8}
+            minZoom={6}
             center={currentLevel.location}
             scrollWheelZoom={true}
             style={{ height: "100vh", width: "100vw" }}

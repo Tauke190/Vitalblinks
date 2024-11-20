@@ -16,11 +16,8 @@ export const LEVELS_TO_LOCATION_MAP: Record<number, tlocation> = {
     10: latLng(28.267506954562734, 83.85970454587223),
 };
 
-export type tgameLevel = Record<number, {
-    name: string,
-    description: string,
-    location: tlocation,
-}>
+export type tlevelKey = keyof typeof LEVELS;
+export type tlevelInfo = typeof LEVELS[tlevelKey]
 
 export const LEVELS = Object.freeze({
     1: {
@@ -74,3 +71,11 @@ export const LEVELS = Object.freeze({
         location: LEVELS_TO_LOCATION_MAP[10]
     }
 } as const);
+
+/**
+ * Tailwind class that sets the dimension of levels circle.
+ */
+export const LEVEL_CIRCLE_DIMENSION = {
+    width: 80,
+    height: 80,
+} as const;
