@@ -18,9 +18,9 @@
     "leaflet": "^1.9.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-dom/server": "react-dom/server",
     "react-leaflet": "^4.2.1",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "zustand": "^5.0.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",

@@ -8,26 +8,28 @@ import { renderToStaticMarkup } from "react-dom/server";
 import SelectedLevelsInfoBox from "./SelectedLevelsInfoBox";
 
 const Levels = () => {
-    const { currentLevel } = useGameState();
+    const { gameState } = useGameState();
 
     // level circle that is active.
-    const [selectedLevel, setSelectedLevel] = useState<tlevelKey>(currentLevel.level);
+    const [selectedLevel, setSelectedLevel] = useState<tlevelKey>(gameState.level);
 
     return (
-        <main className="Levels-screen">
+        <div className="Levels-screen">
             <LayerGroup>
                 {Object.entries(LEVELS).map(([level, levelData], index) => {
                     const levelKey = Number(level) as tlevelKey;
+                    const isSelectedLevel = levelKey === selectedLevel;
 
                     const circleIcon = (
                         <LevelsCircle
                             level={levelKey}
-                            isSelectedLevel={levelKey === selectedLevel}
+                            isSelectedLevel={isSelectedLevel}
                             {...levelData}
                         />);
 
                     return (
                         <Marker
+                            autoPan={isSelectedLevel}
                             key={`${level}-${index}`}
                             icon={divIcon({
                                 html: renderToStaticMarkup(circleIcon),
@@ -45,15 +47,15 @@ const Levels = () => {
                             position={levelData.location}
                         />)
                 })}
+
             </LayerGroup>
 
             <SelectedLevelsInfoBox
-                level={selectedLevel}
                 {...LEVELS[selectedLevel]}
+                setSelectedLevel={setSelectedLevel}
+                selectedLevel={selectedLevel}
             />
-
-
-        </main>
+        </div>
     )
 }
 

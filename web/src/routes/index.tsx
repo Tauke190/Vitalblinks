@@ -7,7 +7,7 @@ export const Route = createFileRoute('/')({
 function IndexPage() {
     return (
         <div>
-            Hello from the router
+            This is the landing page.
         </div>
     )
 }

@@ -4,8 +4,12 @@
 
 
 /*
- * Resetting the markers styles.
- * */
+ * Resetting the leaflet Styles that are not necessary.
+ */
 .leaflet-marker-icon {
     height: 0px !important;
+}
+
+.leaflet-pane {
+    z-index: 40 !important;
 }

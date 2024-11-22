@@ -72,9 +72,9 @@ export const LEVELS = Object.freeze({
     }
 } as const);
 
-/**
- * Tailwind class that sets the dimension of levels circle.
- */
+export const DEFAULT_LEVEL = 1;
+export const MAX_LEVEL = 10;
+
 export const LEVEL_CIRCLE_DIMENSION = {
     width: 80,
     height: 80,

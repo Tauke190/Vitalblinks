@@ -1,8 +1,8 @@
-import { LEVEL_CIRCLE_DIMENSION, tgameLevel, tlevelKey } from "../../data/levels";
+import { LEVEL_CIRCLE_DIMENSION, LEVELS, tlevelKey } from "../../data/levels";
 import { useGameState } from "../../hooks/useGameState";
 import { cn } from "@nextui-org/react";
 
-type tlevelsCirlce = tgameLevel[number]
+type tlevelsCirlce = typeof LEVELS[keyof typeof LEVELS]
     & { level: tlevelKey, isSelectedLevel?: boolean }
 
 /**
@@ -11,11 +11,11 @@ type tlevelsCirlce = tgameLevel[number]
  */
 const LevelsCircle = (props: tlevelsCirlce) => {
     const { level = 1, isSelectedLevel = false } = props;
-    const { currentLevel } = useGameState();
+    const { gameState } = useGameState();
 
-    const isPassedLevel = level < currentLevel.level;
-    const isCurrentLevel = level === currentLevel.level;
-    const isLockedLevel = level > currentLevel.level;
+    const isPassedLevel = level < gameState.level;
+    const isCurrentLevel = level === gameState.level;
+    const isLockedLevel = level > gameState.level;
 
     const BaseLevelCircle = () => (
         <div
