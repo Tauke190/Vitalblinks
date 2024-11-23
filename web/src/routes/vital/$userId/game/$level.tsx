@@ -1,7 +1,6 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 import { DEFAULT_LEVEL } from '../../../../data/levels';
-
-export const DEFAULT_USER_ID = "saroj"
+import { DEFAULT_USER_ID } from '@/data/user';
 
 export const Route = createFileRoute('/vital/$userId/game/$level')({
     component: FirstLevel,

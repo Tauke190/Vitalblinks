@@ -1,9 +1,8 @@
 import { createRootRoute, Outlet } from "@tanstack/react-router"
-import { AuthLayout } from "./auth/_layout"
+import { AuthLayout } from "./auth"
 
 const MainLayout = () => {
     return <>
-        MainLayout
         <Outlet />
     </>
 }

@@ -3,8 +3,8 @@ import { tlevelKey, tlevelInfo, DEFAULT_LEVEL, MAX_LEVEL, LEVELS } from "../../d
 import { Dispatch, MouseEvent, SetStateAction } from "react";
 import { useGameState } from "../../hooks/useGameState";
 import { NextIcon, PreviousIcon, SquareLock02Icon } from "hugeicons-react";
-import { ReactNode, Router, useRouter } from "@tanstack/react-router";
-import { DEFAULT_USER_ID } from "../../routes/vital/$userId/game/$level";
+import { ReactNode, useRouter } from "@tanstack/react-router";
+import { DEFAULT_USER_ID } from "@/data/user";
 
 type tselectedLevelInfoBoxProps = {
     setSelectedLevel: Dispatch<SetStateAction<tlevelKey>>

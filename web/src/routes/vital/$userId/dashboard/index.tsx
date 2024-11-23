@@ -23,7 +23,7 @@ export const Route = createFileRoute('/vital/$userId/dashboard/')({
 })
 
 function DashboardPage() {
-    return <div className='min-h-screen p-5'>
+    return <div className='max-h-screen p-5'>
         <Tabs radius='full' color='primary' defaultSelectedKey={"market-share"}>
             <Tab key={"region"} title="Region">
                 <RegionTab />
