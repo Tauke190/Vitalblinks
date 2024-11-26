@@ -2,9 +2,9 @@ import { DEFAULT_USER_ID } from '@/data/user'
 import { Tab, Tabs } from '@nextui-org/react'
 import { createFileRoute, redirect } from '@tanstack/react-router'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import RegionTab from '@/components/dashboard/Region';
-import MarketShare from '@/components/dashboard/MarketShare';
-import TrendChart from '@/components/dashboard/TrendChart';
+import RegionTab from '@/components/dashboard/region';
+import MarketShare from '@/components/dashboard/marketShare';
+import TrendChart from '@/components/dashboard/trendChart';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 

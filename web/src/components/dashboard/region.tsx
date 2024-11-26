@@ -1,9 +1,5 @@
-import { Tab } from "@nextui-org/react"
-
 const RegionTab = () => {
-    return (
-        "region"
-    )
+    return ("region")
 }
 
 RegionTab.displayName = "Region";

@@ -1,7 +1,7 @@
 import { RefObject } from "react";
-import { DEFAULT_LEVEL, LEVELS, tlevelKey } from "../data/levels";
 import { create } from "zustand";
 import { Map } from "leaflet";
+import { DEFAULT_LEVEL, LEVELS, tlevelKey } from "@/data/levels";
 
 type tgameState = typeof LEVELS[keyof typeof LEVELS] & { level: keyof typeof LEVELS };
 type tgameStateStore = {

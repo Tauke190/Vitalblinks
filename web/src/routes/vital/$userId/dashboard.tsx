@@ -1,3 +1,4 @@
+import Sidebar from '@/components/global/sidebar'
 import { createFileRoute, Outlet } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/vital/$userId/dashboard')({
@@ -7,7 +8,7 @@ export const Route = createFileRoute('/vital/$userId/dashboard')({
 function DashboardLayout() {
     return (
         <main key={'dashboard-layout'}>
-            <div>Sidebar</div>
+            <Sidebar />
             <Outlet />
         </main>
     )
