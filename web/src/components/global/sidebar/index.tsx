@@ -1,3 +1,4 @@
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/shadcn/ui/collapsible";
 import {
     Sidebar as ShadcnSidebar,
     SidebarContent,
@@ -13,7 +14,7 @@ import {
 } from "@/components/shadcn/ui/sidebar";
 import { Link, ReactNode } from "@tanstack/react-router";
 import { BankIcon, CourtLawIcon, CustomerSupportIcon } from "hugeicons-react";
-import { MergeIcon, PersonStandingIcon } from "lucide-react";
+import { ChevronUpIcon, MergeIcon, PersonStandingIcon } from "lucide-react";
 
 type tsubNavItem = {
     name: string,
@@ -136,27 +137,42 @@ const Sidebar = () => {
 
                 {NAVIGATION_DATA.map((group, groupIndex) => {
                     return (
-                        <SidebarGroup key={`nav-group-${groupIndex}`}>
-                            <SidebarGroupLabel>
-                                {group.name}
-                            </SidebarGroupLabel>
-                            <SidebarGroupContent>
-                                <SidebarMenu>
-                                    {group.subNavigation.map((navItem, index) => {
+                        <Collapsible className="group/collapsible">
+                            <SidebarGroup key={`nav-group-${groupIndex}`}>
+                                <SidebarGroupLabel asChild>
+                                    <CollapsibleTrigger>
+                                        <div className="flex items-center gap-2.5">
+                                            {group.icon}
+                                            <span>
+                                                {group.name}
+                                            </span>
+                                        </div>
+                                        <ChevronUpIcon className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
+                                    </CollapsibleTrigger>
+                                </SidebarGroupLabel>
 
-                                        return (
-                                            <SidebarMenuItem key={`group-${groupIndex}-nav-item-${index}`}>
-                                                <SidebarMenuButton asChild>
-                                                    <Link to={navItem.link}>
-                                                        {navItem.name}
-                                                    </Link>
-                                                </SidebarMenuButton>
-                                            </SidebarMenuItem>
-                                        )
-                                    })}
-                                </SidebarMenu>
-                            </SidebarGroupContent>
-                        </SidebarGroup>
+                                <CollapsibleContent>
+                                    <SidebarGroupContent>
+                                        <SidebarContent>
+                                            <SidebarMenu>
+                                                {group.subNavigation.map((navItem, index) => {
+
+                                                    return (
+                                                        <SidebarMenuItem key={`group-${groupIndex}-nav-item-${index}`}>
+                                                            <SidebarMenuButton asChild >
+                                                                <Link to={navItem.link}>
+                                                                    {navItem.name}
+                                                                </Link>
+                                                            </SidebarMenuButton>
+                                                        </SidebarMenuItem>
+                                                    )
+                                                })}
+                                            </SidebarMenu>
+                                        </SidebarContent>
+                                    </SidebarGroupContent>
+                                </CollapsibleContent>
+                            </SidebarGroup>
+                        </Collapsible>
                     )
                 })}
 
