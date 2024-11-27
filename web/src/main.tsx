@@ -4,7 +4,7 @@ import { NextUIProvider } from '@nextui-org/react';
 import { createRouter, RouterProvider } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from "@tanstack/router-devtools"
 
-import "./App.css"; // for tailwindcss
+import "./css/App.css"; // For tailwind and shadcn 
 
 // importing router definitions
 import { routeTree } from "./routeTree.gen.ts"
