@@ -16,8 +16,8 @@ import {
     SidebarProvider,
 } from "@/components/shadcn/ui/sidebar";
 import { Link, ReactNode } from "@tanstack/react-router";
-import { BankIcon, CourtLawIcon, CustomerSupportIcon } from "hugeicons-react";
-import { ChevronUpIcon, MergeIcon, PersonStandingIcon } from "lucide-react";
+
+import { BuildingIcon, ChevronUpIcon, LucideBanknote, MergeIcon, PersonStandingIcon, PhoneIcon } from "lucide-react";
 
 type tsubNavItem = {
     name: string,
@@ -32,7 +32,7 @@ type tnavigation = {
 const NAVIGATION_DATA: tnavigation[] = [
     {
         name: "Bank",
-        icon: <BankIcon />,
+        icon: <LucideBanknote />,
         subNavigation: [
             {
                 name: "loan",
@@ -51,7 +51,7 @@ const NAVIGATION_DATA: tnavigation[] = [
 
     {
         name: "Legal",
-        icon: <CourtLawIcon />,
+        icon: <BuildingIcon />,
         subNavigation: [
             {
                 name: "Sue",
@@ -111,7 +111,7 @@ const NAVIGATION_DATA: tnavigation[] = [
     },
     {
         name: "Support and help",
-        icon: <CustomerSupportIcon />,
+        icon: <PhoneIcon />,
         subNavigation: [
             {
                 name: "customer care",
@@ -153,7 +153,9 @@ const Sidebar = () => {
                                                 <SidebarMenuButton asChild>
                                                     <CollapsibleTrigger>
                                                         <div className="flex items-center gap-2.5">
-                                                            {group.icon}
+                                                            <div className="icon h-5 w-5">
+                                                                {group.icon}
+                                                            </div>
                                                             <span>
                                                                 {group.name}
                                                             </span>
