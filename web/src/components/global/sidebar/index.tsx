@@ -10,6 +10,9 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
+    SidebarMenuSub,
+    SidebarMenuSubButton,
+    SidebarMenuSubItem,
     SidebarProvider,
 } from "@/components/shadcn/ui/sidebar";
 import { Link, ReactNode } from "@tanstack/react-router";
@@ -135,50 +138,58 @@ const Sidebar = () => {
                     Level 1
                 </SidebarHeader>
 
-                {NAVIGATION_DATA.map((group, groupIndex) => {
-                    return (
-                        <Collapsible className="group/collapsible">
-                            <SidebarGroup key={`nav-group-${groupIndex}`}>
-                                <SidebarGroupLabel asChild>
-                                    <CollapsibleTrigger>
-                                        <div className="flex items-center gap-2.5">
-                                            {group.icon}
-                                            <span>
-                                                {group.name}
-                                            </span>
-                                        </div>
-                                        <ChevronUpIcon className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
-                                    </CollapsibleTrigger>
-                                </SidebarGroupLabel>
+                <SidebarContent>
+                    <SidebarGroup>
+                        <SidebarGroupLabel>
+                            Dashboard
+                        </SidebarGroupLabel>
 
-                                <CollapsibleContent>
-                                    <SidebarGroupContent>
-                                        <SidebarContent>
-                                            <SidebarMenu>
-                                                {group.subNavigation.map((navItem, index) => {
+                        <SidebarGroupContent className="space-y-2.5">
+                            <SidebarMenu>
+                                {NAVIGATION_DATA.map((group, groupIndex) => {
+                                    return (
+                                        <Collapsible className="group/collapsible" key={`nav-group-${groupIndex}`}>
+                                            <SidebarMenuItem >
+                                                <SidebarMenuButton asChild>
+                                                    <CollapsibleTrigger>
+                                                        <div className="flex items-center gap-2.5">
+                                                            {group.icon}
+                                                            <span>
+                                                                {group.name}
+                                                            </span>
+                                                        </div>
+                                                        <ChevronUpIcon className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
+                                                    </CollapsibleTrigger>
+                                                </SidebarMenuButton>
 
-                                                    return (
-                                                        <SidebarMenuItem key={`group-${groupIndex}-nav-item-${index}`}>
-                                                            <SidebarMenuButton asChild >
-                                                                <Link to={navItem.link}>
-                                                                    {navItem.name}
-                                                                </Link>
-                                                            </SidebarMenuButton>
-                                                        </SidebarMenuItem>
-                                                    )
-                                                })}
-                                            </SidebarMenu>
-                                        </SidebarContent>
-                                    </SidebarGroupContent>
-                                </CollapsibleContent>
-                            </SidebarGroup>
-                        </Collapsible>
-                    )
-                })}
+                                                <CollapsibleContent>
 
-                <SidebarFooter >
-                    User card
-                </SidebarFooter>
+                                                    <SidebarMenuSub>
+                                                        {group.subNavigation.map((navItem, index) => {
+                                                            return (
+                                                                <SidebarMenuSubItem key={`group-${groupIndex}-nav-item-${index}`}>
+                                                                    <SidebarMenuSubButton asChild>
+                                                                        <Link to={navItem.link}>
+                                                                            {navItem.name}
+                                                                        </Link>
+                                                                    </SidebarMenuSubButton>
+                                                                </SidebarMenuSubItem>
+                                                            )
+                                                        })}
+                                                    </SidebarMenuSub>
+
+                                                </CollapsibleContent>
+
+                                            </SidebarMenuItem>
+                                        </Collapsible >
+                                    )
+                                })}
+                            </SidebarMenu>
+                        </SidebarGroupContent>
+                    </SidebarGroup>
+                </SidebarContent>
+
+                <SidebarFooter > User card  </SidebarFooter>
 
             </ShadcnSidebar >
         </SidebarProvider >
