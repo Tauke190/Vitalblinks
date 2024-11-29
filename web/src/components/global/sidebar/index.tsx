@@ -15,6 +15,7 @@ import {
     SidebarMenuSubItem,
     SidebarProvider,
 } from "@/components/shadcn/ui/sidebar";
+import { cn } from "@/lib/utils";
 import { Link, ReactNode } from "@tanstack/react-router";
 
 import { BuildingIcon, ChevronUpIcon, LucideBanknote, MergeIcon, PersonStandingIcon, PhoneIcon } from "lucide-react";
@@ -29,10 +30,12 @@ type tnavigation = {
     subNavigation: tsubNavItem[]
 }
 
+const iconStyles = "h-4 aspect-square";
+
 const NAVIGATION_DATA: tnavigation[] = [
     {
         name: "Bank",
-        icon: <LucideBanknote />,
+        icon: <LucideBanknote className={cn("", iconStyles)} />,
         subNavigation: [
             {
                 name: "loan",
@@ -51,7 +54,7 @@ const NAVIGATION_DATA: tnavigation[] = [
 
     {
         name: "Legal",
-        icon: <BuildingIcon />,
+        icon: <BuildingIcon className={cn("", iconStyles)} />,
         subNavigation: [
             {
                 name: "Sue",
@@ -74,7 +77,7 @@ const NAVIGATION_DATA: tnavigation[] = [
 
     {
         name: "Merge & Acquisition",
-        icon: <MergeIcon />,
+        icon: <MergeIcon className={cn("", iconStyles)} />,
         subNavigation: [
             {
                 name: "Merge",
@@ -93,7 +96,7 @@ const NAVIGATION_DATA: tnavigation[] = [
 
     {
         name: "General",
-        icon: <PersonStandingIcon />,
+        icon: <PersonStandingIcon className={cn("", iconStyles)} />,
         subNavigation: [
             {
                 name: "Level details",
@@ -111,7 +114,7 @@ const NAVIGATION_DATA: tnavigation[] = [
     },
     {
         name: "Support and help",
-        icon: <PhoneIcon />,
+        icon: <PhoneIcon className={cn("", iconStyles)} />,
         subNavigation: [
             {
                 name: "customer care",
@@ -152,13 +155,14 @@ const Sidebar = () => {
                                             <SidebarMenuItem >
                                                 <SidebarMenuButton asChild>
                                                     <CollapsibleTrigger>
+
                                                         <div className="flex items-center gap-2.5">
-                                                            <div className="icon h-5 w-5">
-                                                                {group.icon}
-                                                            </div>
+                                                            {group.icon}
+
                                                             <span>
                                                                 {group.name}
                                                             </span>
+
                                                         </div>
                                                         <ChevronUpIcon className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
                                                     </CollapsibleTrigger>
@@ -191,7 +195,9 @@ const Sidebar = () => {
                     </SidebarGroup>
                 </SidebarContent>
 
-                <SidebarFooter > User card  </SidebarFooter>
+                <SidebarFooter>
+                    Footer ho hai tw yo.
+                </SidebarFooter>
 
             </ShadcnSidebar >
         </SidebarProvider >
