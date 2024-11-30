@@ -32,7 +32,6 @@ func main() {
 	port := os.Getenv("PORT")
 
 	// server configuration
-
 	svr := &http.Server{
 		Handler: router,
 		Addr:    fmt.Sprintf("127.0.0.1:%s", port),
@@ -44,5 +43,4 @@ func main() {
 	fmt.Println("The server is running in 127.0.0.1:3001")
 	// runs the server
 	log.Fatal(svr.ListenAndServe())
-
 }
