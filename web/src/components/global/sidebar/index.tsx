@@ -1,10 +1,10 @@
 import {
     Sidebar as ShadcnSidebar,
-    SidebarFooter,
-    SidebarHeader,
 } from "@/components/shadcn/ui/sidebar";
 
-import SidebarContent from "./sidebarContent";
+import SidebarContent from "./content";
+import SidebarHeader from "./header";
+import SidebarFooter from "./footer";
 
 const Sidebar = () => {
     return (
@@ -15,15 +15,9 @@ const Sidebar = () => {
             className="col-[1/1] row-[2/3]"
         >
 
-            <SidebarHeader>
-                Level 1
-            </SidebarHeader>
-
+            <SidebarHeader />
             <SidebarContent />
-
-            <SidebarFooter>
-                Footer ho hai tw yo.
-            </SidebarFooter>
+            <SidebarFooter />
 
         </ShadcnSidebar >
     )

@@ -24,7 +24,7 @@ declare module "@tanstack/react-router" {
 
 // rendering the dev tool only in development
 const RouterDevTools = import.meta.env.DEV
-    ? () => <TanStackRouterDevtools router={router} initialIsOpen={false} />
+    ? () => <TanStackRouterDevtools router={router} initialIsOpen={false} position='bottom-right' />
     : () => null
 
 

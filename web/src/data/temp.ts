@@ -24,3 +24,9 @@ export const PieChartData = {
         },
     ],
 };
+
+export const USER = {
+    name: "saroj regmi",
+    email: "sarojregmi.official@gmail.com",
+    profile: "https://avatars.githubusercontent.com/u/94213188?v=4"
+}

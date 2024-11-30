@@ -1,5 +1,8 @@
 const RegionTab = () => {
-    return ("region")
+    return (
+        <div>
+        </div>
+    )
 }
 
 RegionTab.displayName = "Region";
