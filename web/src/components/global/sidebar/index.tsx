@@ -5,20 +5,18 @@ import {
 import SidebarContent from "./content";
 import SidebarHeader from "./header";
 import SidebarFooter from "./footer";
+import { cn } from "@/lib/utils";
 
 const Sidebar = () => {
     return (
         <ShadcnSidebar
-            variant="floating"
-            collapsible="icon"
             side="left"
-            className="col-[1/1] row-[2/3]"
+            variant="floating"
+            className={cn("col-[1/1] row-[2/3]",)}
         >
-
             <SidebarHeader />
             <SidebarContent />
             <SidebarFooter />
-
         </ShadcnSidebar >
     )
 };

@@ -1,6 +1,6 @@
 import Sidebar from '@/components/global/sidebar'
 import TopBar from '@/components/global/topbar'
-import { SidebarProvider } from '@/components/shadcn/ui/sidebar'
+import { SidebarInset, SidebarProvider } from '@/components/shadcn/ui/sidebar'
 import { createFileRoute, Outlet } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/vital/$userId/dashboard')({
@@ -8,20 +8,16 @@ export const Route = createFileRoute('/vital/$userId/dashboard')({
 })
 
 function DashboardLayout() {
+
     return (
         <SidebarProvider>
-            <main key={'dashboard-layout'}
-                className='grid grid-rows-2 grid-cols-2 min-h-screen h-full w-full'
-                style={{
-                    gridTemplateColumns: "285px 1fr",
-                    gridTemplateRows: "50px 1fr",
-                    gap: "20px"
-                }}
-            >
+            <Sidebar />
+
+            <SidebarInset className='flex flex-col gap-2.5'>
                 <TopBar />
-                <Sidebar />
                 <Outlet />
-            </main>
+            </SidebarInset>
+
         </SidebarProvider>
     )
 }
