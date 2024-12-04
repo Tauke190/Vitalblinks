@@ -1,5 +1,4 @@
 import { useSidebar } from "@/components/shadcn/ui/sidebar";
-import { BreadcrumbItem, Breadcrumbs } from "@nextui-org/react";
 import { LucidePanelLeft } from "lucide-react";
 
 const TopBar = () => {
@@ -13,23 +12,6 @@ const TopBar = () => {
                 onClick={toggleSidebar}
                 className="h-5 aspect-square text-gray-500 cursor-pointer"
             />
-
-            <div className="breadcumbs">
-                <Breadcrumbs>
-                    <BreadcrumbItem>
-                        Vital
-                    </BreadcrumbItem>
-
-                    <BreadcrumbItem>
-                        Saroj
-                    </BreadcrumbItem>
-
-                    <BreadcrumbItem>
-                        Dashboard
-                    </BreadcrumbItem>
-                </Breadcrumbs>
-            </div>
-
         </div>
     )
 }

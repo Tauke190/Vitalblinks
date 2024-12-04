@@ -2,7 +2,10 @@ import {
     SidebarHeader as ShadcnSidebarHeader
 } from "@/components/shadcn/ui/sidebar"
 
-import { ChevronsUpDownIcon } from "lucide-react";
+const orgData = {
+    name: "Harvard Business",
+    tag: "Core blinker"
+}
 
 const SidebarHeader = () => {
     return (
@@ -14,15 +17,14 @@ const SidebarHeader = () => {
                     </div>
                     <div className="details">
                         <div className="title font-bold text-gray-200">
-                            Harvard Business
+                            {orgData.name}
                         </div>
+
                         <div className="desc text-sm text-gray-400">
-                            Core blinker
+                            {orgData.tag}
                         </div>
                     </div>
                 </div>
-
-                <ChevronsUpDownIcon className="h-4 aspect-square" />
             </div>
         </ShadcnSidebarHeader>
     )
