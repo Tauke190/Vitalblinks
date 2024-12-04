@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { Card, CardBody, CardHeader } from "@nextui-org/react";
 import { HtmlHTMLAttributes } from "react";
 
 type tRegionTabProps = {
@@ -8,8 +9,12 @@ const RegionTab = (props: tRegionTabProps) => {
     const { className } = props;
 
     return (
-        <div className={cn("", className)}>
-        </div>
+        <Card className={cn("", className)}>
+            <CardHeader>Region</CardHeader>
+            <CardBody>
+                <p>Region content</p>
+            </CardBody>
+        </Card>
     )
 }
 

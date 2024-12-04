@@ -22,16 +22,17 @@ export const Route = createFileRoute('/vital/$userId/dashboard/')({
 })
 
 function DashboardPage() {
-    return <div className='h-full w-auto'
+    return <div className='h-[calc(100vh-72px)] w-auto py-2 pr-2'
         style={{
             display: 'grid',
             gridTemplateColumns: '1fr 1fr',
             gridTemplateRows: '1fr 1fr',
-            gap: '20px',
+            gap: '10px',
         }}>
-        <TrendChart />
-        <MarketShare />
-        <RegionTab />
+
+        <RegionTab className='w-full col-[1/3] row-[1/1]' />
+        <TrendChart className='col-[2/2] row-[2/2]' />
+        <MarketShare className='col-[1/1] row-[2/2]' />
 
     </div>
 }

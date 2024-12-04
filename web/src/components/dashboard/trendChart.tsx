@@ -12,6 +12,7 @@ import { Line } from 'react-chartjs-2';
 import { faker } from "@faker-js/faker"
 import { HtmlHTMLAttributes } from 'react';
 import { cn } from '@/lib/utils';
+import { Card, CardBody, CardHeader } from '@nextui-org/react';
 
 ChartJS.register(
     CategoryScale,
@@ -62,9 +63,12 @@ type tTrendChartProps = {
 const TrendChart = (props: tTrendChartProps) => {
     const { className } = props;
 
-    return <div className={cn("", className)}>
-        <Line data={data} />
-    </div>
+    return <Card className={cn("", className)}>
+        <CardHeader>Region</CardHeader>
+        <CardBody>
+            <Line data={data} />
+        </CardBody>
+    </Card>
 }
 
 export default TrendChart;
