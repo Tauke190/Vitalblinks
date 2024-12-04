@@ -1,5 +1,4 @@
 import { DEFAULT_USER_ID } from '@/data/user'
-import { Tab, Tabs } from '@nextui-org/react'
 import { createFileRoute, redirect } from '@tanstack/react-router'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import RegionTab from '@/components/dashboard/region';
@@ -23,19 +22,16 @@ export const Route = createFileRoute('/vital/$userId/dashboard/')({
 })
 
 function DashboardPage() {
-    return <div className='h-full w-auto'>
-        <Tabs radius='full' color='primary' defaultSelectedKey={"market-share"}>
-            <Tab key={"region"} title="Region">
-                <RegionTab />
-            </Tab>
+    return <div className='h-full w-auto'
+        style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gridTemplateRows: '1fr 1fr',
+            gap: '20px',
+        }}>
+        <TrendChart />
+        <MarketShare />
+        <RegionTab />
 
-            <Tab title="Market Share" key="market-share" >
-                <MarketShare />
-            </Tab>
-
-            <Tab title="Trend Chart" key={"trend-chart"}>
-                <TrendChart />
-            </Tab>
-        </Tabs>
     </div>
 }

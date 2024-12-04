@@ -10,6 +10,8 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { faker } from "@faker-js/faker"
+import { HtmlHTMLAttributes } from 'react';
+import { cn } from '@/lib/utils';
 
 ChartJS.register(
     CategoryScale,
@@ -54,8 +56,15 @@ export const data = {
     ],
 };
 
-const TrendChart = () => {
-    return <Line data={data} />;
+type tTrendChartProps = {
+} & HtmlHTMLAttributes<HTMLDivElement>
+
+const TrendChart = (props: tTrendChartProps) => {
+    const { className } = props;
+
+    return <div className={cn("", className)}>
+        <Line data={data} />
+    </div>
 }
 
 export default TrendChart;
