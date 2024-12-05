@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import Levels from '@/components/map/levels'
 import GameMap from '@/components/map/map'
+import Levels from '@/components/map/levels'
 
 export const Route = createFileRoute('/vital/$userId/map')({
     component: MapPage,

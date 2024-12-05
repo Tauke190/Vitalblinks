@@ -9,6 +9,7 @@ import "./css/App.css"; // For tailwind and shadcn
 // importing router definitions
 import { routeTree } from "./routeTree.gen.ts"
 import DefaultRoute404Comp from './components/404.tsx';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const router = createRouter({
     routeTree,
@@ -27,16 +28,19 @@ const RouterDevTools = import.meta.env.DEV
     ? () => <TanStackRouterDevtools router={router} initialIsOpen={false} position='bottom-right' />
     : () => null
 
+const queryClient = new QueryClient()
 
 // creating the main root component.
 const App = () => {
     return (
-        <StrictMode>
-            <NextUIProvider>
-                <RouterProvider router={router} />
-            </NextUIProvider>
-            <RouterDevTools />
-        </StrictMode>
+        <QueryClientProvider client={queryClient}>
+            <StrictMode>
+                <NextUIProvider>
+                    <RouterProvider router={router} />
+                </NextUIProvider>
+                <RouterDevTools />
+            </StrictMode>
+        </QueryClientProvider>
     )
 }
 
