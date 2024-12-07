@@ -9,90 +9,74 @@ import (
 	"vitalblinks-server/config"
 	"vitalblinks-server/models"
 
-	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 var userCollection = config.DB.Collection("users")
 
-func CreateUser(w http.ResponseWriter, r *http.Request) {
+func registerUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
+	// getting the user data from the request body
 	var user models.User
-	_ = json.NewDecoder(r.Body).Decode(&user)
-
-	// inserting user into the database with 5 seconds timeout
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-
-	result, err := userCollection.InsertOne(ctx, user)
-
+	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
-		http.Error(w, "Error inserting user", http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	json.NewEncoder(w).Encode(result)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	// checking user existence before registration
+	var existingUser models.User
+	err = userCollection.FindOne(ctx, bson.M{"email": user.Email}).Decode(&existingUser)
+
+	if err == nil {
+		http.Error(w, "User already exists", http.StatusBadRequest)
+		return
+	}
+
+	// hashing the user password
+	// TODO: Implement a hashing function
+	// user.Password = hash(user.Password)
+
+	_, err = userCollection.InsertOne(ctx, user)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(user)
 }
 
-func UpdateUser(w http.ResponseWriter, r *http.Request) {
-
+func loginUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
+	// getting the user data from the request body
 	var user models.User
-	_ = json.NewDecoder(r.Body).Decode(&user)
+	err := json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 
-	// inserting user into the database with 5 seconds timeout
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	result, err := userCollection.UpdateByID(ctx, user.ID, user)
+	// checking user existence before login
+	var existingUser models.User
+	err = userCollection.FindOne(ctx, bson.M{"email": user.Email}).Decode(&existingUser)
 
 	if err != nil {
-		http.Error(w, "Error updating user", http.StatusInternalServerError)
+		http.Error(w, "User not found", http.StatusBadRequest)
 		return
 	}
 
-	json.NewEncoder(w).Encode(result)
-}
-
-func DeleteUser(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-
-	var userId string
-
-	// inserting user into the database with 5 seconds timeout
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-
-	result, err := userCollection.DeleteOne(ctx, { ID: userId })
-
-	if err != nil {
-		http.Error(w, "Error deleting user", http.StatusInternalServerError)
+	if existingUser.Password != user.Password {
+		http.Error(w, "Invalid password", http.StatusBadRequest)
 		return
 	}
 
-	json.NewEncoder(w).Encode(result)
-}
-
-func GetUsers(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-
-	// inserting user into the database with 5 seconds timeout
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-
-	cursor, err := userCollection.Find(ctx, {})
-
-	if err != nil {
-		http.Error(w, "Error fetching users", http.StatusInternalServerError)
-		return
-	}
-
-	var users []models.User
-	if err = cursor.All(ctx, &users); err != nil {
-		http.Error(w, "Error fetching users", http.StatusInternalServerError)
-		return
-	}
-
-	json.NewEncoder(w).Encode(users)
+	json.NewEncoder(w).Encode(existingUser)
 }
