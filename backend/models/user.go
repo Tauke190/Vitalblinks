@@ -7,6 +7,6 @@ type User struct {
 	UserName string             `bson:"username,omitempty"`
 	Email    string             `bson:"email,omitempty"`
 	Password string             `bson:"password,omitempty"`
-	role     string             `bson:"role,omitempty"`
+	Role     string             `bson:"role,omitempty"`
 	// TODO: Should change to an enum after studying the requirements more clearly
 }

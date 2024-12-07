@@ -82,3 +82,40 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 
 	json.NewEncoder(w).Encode(existingUser)
 }
+
+func ForgotPassword(w http.ResponseWriter, r *http.Request) {
+	var userCollection = config.DB.Collection("users")
+
+	w.Header().Set("Content-Type", "application/json")
+
+	// getting the user data from the request body
+	var requestData struct {
+		Email string `json:"email"`
+		Mode  string `json:"mode"`
+	}
+
+	err := json.NewDecoder(r.Body).Decode(requestData)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	// checking user existence before password reset
+	var existingUser models.User
+	err = userCollection.FindOne(ctx, bson.M{"email": requestData.Email}).Decode(&existingUser)
+
+	if err != nil {
+		http.Error(w, "User not found", http.StatusBadRequest)
+		return
+	}
+
+	// Generating opt
+	// TODO: Implement a function to generate OTP or magic link according to the user
+	// otp := generateOTP()
+
+	// Sending the OTP to the user via email
+	// TODO: Setup email sending client
+}
