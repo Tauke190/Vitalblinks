@@ -7,9 +7,7 @@ import TrendChart from '@/components/dashboard/trendChart';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-export const Route = createFileRoute('/vital/$userId/dashboard/')({
-    component: DashboardPage,
-    loader: (ctx) => {
+{/* loader: (ctx) => {
         const { userId } = ctx.params
         if (userId !== DEFAULT_USER_ID)
             redirect({
@@ -18,7 +16,9 @@ export const Route = createFileRoute('/vital/$userId/dashboard/')({
             })
 
         return { userId }
-    },
+    }, */}
+export const Route = createFileRoute('/vital/$userId/dashboard/')({
+    component: DashboardPage,
 })
 
 function DashboardPage() {

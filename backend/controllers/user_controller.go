@@ -12,9 +12,9 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-var userCollection = config.DB.Collection("users")
+func RegisterUser(w http.ResponseWriter, r *http.Request) {
+	var userCollection = config.DB.Collection("users")
 
-func registerUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	// getting the user data from the request body
@@ -50,7 +50,9 @@ func registerUser(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(user)
 }
 
-func loginUser(w http.ResponseWriter, r *http.Request) {
+func LoginUser(w http.ResponseWriter, r *http.Request) {
+	var userCollection = config.DB.Collection("users")
+
 	w.Header().Set("Content-Type", "application/json")
 
 	// getting the user data from the request body

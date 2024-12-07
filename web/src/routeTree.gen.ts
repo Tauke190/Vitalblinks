@@ -8,12 +8,13 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+import { createFileRoute } from '@tanstack/react-router'
+
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as AuthImport } from './routes/auth'
 import { Route as IndexImport } from './routes/index'
-import { Route as AuthIndexImport } from './routes/auth/index'
 import { Route as AuthRegisterImport } from './routes/auth/register'
 import { Route as AuthLoginIndexImport } from './routes/auth/login/index'
 import { Route as VitalUserIdMapImport } from './routes/vital/$userId/map'
@@ -22,6 +23,10 @@ import { Route as VitalUserIdDashboardIndexImport } from './routes/vital/$userId
 import { Route as AuthLoginForgotPasswordIndexImport } from './routes/auth/login/forgot-password/index'
 import { Route as VitalUserIdGameLevelImport } from './routes/vital/$userId/game/$level'
 import { Route as AuthLoginForgotPasswordVerifyImport } from './routes/auth/login/forgot-password/verify'
+
+// Create Virtual Routes
+
+const AuthIndexLazyImport = createFileRoute('/auth/')()
 
 // Create/Update Routes
 
@@ -37,11 +42,11 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const AuthIndexRoute = AuthIndexImport.update({
+const AuthIndexLazyRoute = AuthIndexLazyImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AuthRoute,
-} as any)
+} as any).lazy(() => import('./routes/auth/index.lazy').then((d) => d.Route))
 
 const AuthRegisterRoute = AuthRegisterImport.update({
   id: '/register',
@@ -122,7 +127,7 @@ declare module '@tanstack/react-router' {
       id: '/auth/'
       path: '/'
       fullPath: '/auth/'
-      preLoaderRoute: typeof AuthIndexImport
+      preLoaderRoute: typeof AuthIndexLazyImport
       parentRoute: typeof AuthImport
     }
     '/vital/$userId/dashboard': {
@@ -181,7 +186,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthRouteChildren {
   AuthRegisterRoute: typeof AuthRegisterRoute
-  AuthIndexRoute: typeof AuthIndexRoute
+  AuthIndexLazyRoute: typeof AuthIndexLazyRoute
   AuthLoginIndexRoute: typeof AuthLoginIndexRoute
   AuthLoginForgotPasswordVerifyRoute: typeof AuthLoginForgotPasswordVerifyRoute
   AuthLoginForgotPasswordIndexRoute: typeof AuthLoginForgotPasswordIndexRoute
@@ -189,7 +194,7 @@ interface AuthRouteChildren {
 
 const AuthRouteChildren: AuthRouteChildren = {
   AuthRegisterRoute: AuthRegisterRoute,
-  AuthIndexRoute: AuthIndexRoute,
+  AuthIndexLazyRoute: AuthIndexLazyRoute,
   AuthLoginIndexRoute: AuthLoginIndexRoute,
   AuthLoginForgotPasswordVerifyRoute: AuthLoginForgotPasswordVerifyRoute,
   AuthLoginForgotPasswordIndexRoute: AuthLoginForgotPasswordIndexRoute,
@@ -212,7 +217,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
   '/auth/register': typeof AuthRegisterRoute
-  '/auth/': typeof AuthIndexRoute
+  '/auth/': typeof AuthIndexLazyRoute
   '/vital/$userId/dashboard': typeof VitalUserIdDashboardRouteWithChildren
   '/vital/$userId/map': typeof VitalUserIdMapRoute
   '/auth/login': typeof AuthLoginIndexRoute
@@ -225,7 +230,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth/register': typeof AuthRegisterRoute
-  '/auth': typeof AuthIndexRoute
+  '/auth': typeof AuthIndexLazyRoute
   '/vital/$userId/map': typeof VitalUserIdMapRoute
   '/auth/login': typeof AuthLoginIndexRoute
   '/auth/login/forgot-password/verify': typeof AuthLoginForgotPasswordVerifyRoute
@@ -239,7 +244,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
   '/auth/register': typeof AuthRegisterRoute
-  '/auth/': typeof AuthIndexRoute
+  '/auth/': typeof AuthIndexLazyRoute
   '/vital/$userId/dashboard': typeof VitalUserIdDashboardRouteWithChildren
   '/vital/$userId/map': typeof VitalUserIdMapRoute
   '/auth/login/': typeof AuthLoginIndexRoute
@@ -341,7 +346,7 @@ export const routeTree = rootRoute
       "parent": "/auth"
     },
     "/auth/": {
-      "filePath": "auth/index.tsx",
+      "filePath": "auth/index.lazy.tsx",
       "parent": "/auth"
     },
     "/vital/$userId/dashboard": {
