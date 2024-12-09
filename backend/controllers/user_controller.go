@@ -37,10 +37,8 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// hashing the user password
 	// TODO: Implement a hashing function
 	// user.Password = hash(user.Password)
-
 	_, err = userCollection.InsertOne(ctx, user)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

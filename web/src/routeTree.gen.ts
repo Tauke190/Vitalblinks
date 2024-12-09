@@ -16,9 +16,12 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as AuthImport } from './routes/auth'
 import { Route as IndexImport } from './routes/index'
 import { Route as AuthRegisterImport } from './routes/auth/register'
+import { Route as AuthRegisterIndexImport } from './routes/auth/register/index'
 import { Route as AuthLoginIndexImport } from './routes/auth/login/index'
 import { Route as VitalUserIdMapImport } from './routes/vital/$userId/map'
 import { Route as VitalUserIdDashboardImport } from './routes/vital/$userId/dashboard'
+import { Route as AuthRegisterInfoImport } from './routes/auth/register/info'
+import { Route as AuthRegisterConfirmationImport } from './routes/auth/register/confirmation'
 import { Route as VitalUserIdDashboardIndexImport } from './routes/vital/$userId/dashboard/index'
 import { Route as AuthLoginForgotPasswordIndexImport } from './routes/auth/login/forgot-password/index'
 import { Route as VitalUserIdGameLevelImport } from './routes/vital/$userId/game/$level'
@@ -54,6 +57,12 @@ const AuthRegisterRoute = AuthRegisterImport.update({
   getParentRoute: () => AuthRoute,
 } as any)
 
+const AuthRegisterIndexRoute = AuthRegisterIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthRegisterRoute,
+} as any)
+
 const AuthLoginIndexRoute = AuthLoginIndexImport.update({
   id: '/login/',
   path: '/login/',
@@ -70,6 +79,18 @@ const VitalUserIdDashboardRoute = VitalUserIdDashboardImport.update({
   id: '/vital/$userId/dashboard',
   path: '/vital/$userId/dashboard',
   getParentRoute: () => rootRoute,
+} as any)
+
+const AuthRegisterInfoRoute = AuthRegisterInfoImport.update({
+  id: '/info',
+  path: '/info',
+  getParentRoute: () => AuthRegisterRoute,
+} as any)
+
+const AuthRegisterConfirmationRoute = AuthRegisterConfirmationImport.update({
+  id: '/confirmation',
+  path: '/confirmation',
+  getParentRoute: () => AuthRegisterRoute,
 } as any)
 
 const VitalUserIdDashboardIndexRoute = VitalUserIdDashboardIndexImport.update({
@@ -130,6 +151,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthIndexLazyImport
       parentRoute: typeof AuthImport
     }
+    '/auth/register/confirmation': {
+      id: '/auth/register/confirmation'
+      path: '/confirmation'
+      fullPath: '/auth/register/confirmation'
+      preLoaderRoute: typeof AuthRegisterConfirmationImport
+      parentRoute: typeof AuthRegisterImport
+    }
+    '/auth/register/info': {
+      id: '/auth/register/info'
+      path: '/info'
+      fullPath: '/auth/register/info'
+      preLoaderRoute: typeof AuthRegisterInfoImport
+      parentRoute: typeof AuthRegisterImport
+    }
     '/vital/$userId/dashboard': {
       id: '/vital/$userId/dashboard'
       path: '/vital/$userId/dashboard'
@@ -150,6 +185,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/auth/login'
       preLoaderRoute: typeof AuthLoginIndexImport
       parentRoute: typeof AuthImport
+    }
+    '/auth/register/': {
+      id: '/auth/register/'
+      path: '/'
+      fullPath: '/auth/register/'
+      preLoaderRoute: typeof AuthRegisterIndexImport
+      parentRoute: typeof AuthRegisterImport
     }
     '/auth/login/forgot-password/verify': {
       id: '/auth/login/forgot-password/verify'
@@ -184,8 +226,24 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
+interface AuthRegisterRouteChildren {
+  AuthRegisterConfirmationRoute: typeof AuthRegisterConfirmationRoute
+  AuthRegisterInfoRoute: typeof AuthRegisterInfoRoute
+  AuthRegisterIndexRoute: typeof AuthRegisterIndexRoute
+}
+
+const AuthRegisterRouteChildren: AuthRegisterRouteChildren = {
+  AuthRegisterConfirmationRoute: AuthRegisterConfirmationRoute,
+  AuthRegisterInfoRoute: AuthRegisterInfoRoute,
+  AuthRegisterIndexRoute: AuthRegisterIndexRoute,
+}
+
+const AuthRegisterRouteWithChildren = AuthRegisterRoute._addFileChildren(
+  AuthRegisterRouteChildren,
+)
+
 interface AuthRouteChildren {
-  AuthRegisterRoute: typeof AuthRegisterRoute
+  AuthRegisterRoute: typeof AuthRegisterRouteWithChildren
   AuthIndexLazyRoute: typeof AuthIndexLazyRoute
   AuthLoginIndexRoute: typeof AuthLoginIndexRoute
   AuthLoginForgotPasswordVerifyRoute: typeof AuthLoginForgotPasswordVerifyRoute
@@ -193,7 +251,7 @@ interface AuthRouteChildren {
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
-  AuthRegisterRoute: AuthRegisterRoute,
+  AuthRegisterRoute: AuthRegisterRouteWithChildren,
   AuthIndexLazyRoute: AuthIndexLazyRoute,
   AuthLoginIndexRoute: AuthLoginIndexRoute,
   AuthLoginForgotPasswordVerifyRoute: AuthLoginForgotPasswordVerifyRoute,
@@ -216,11 +274,14 @@ const VitalUserIdDashboardRouteWithChildren =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
-  '/auth/register': typeof AuthRegisterRoute
+  '/auth/register': typeof AuthRegisterRouteWithChildren
   '/auth/': typeof AuthIndexLazyRoute
+  '/auth/register/confirmation': typeof AuthRegisterConfirmationRoute
+  '/auth/register/info': typeof AuthRegisterInfoRoute
   '/vital/$userId/dashboard': typeof VitalUserIdDashboardRouteWithChildren
   '/vital/$userId/map': typeof VitalUserIdMapRoute
   '/auth/login': typeof AuthLoginIndexRoute
+  '/auth/register/': typeof AuthRegisterIndexRoute
   '/auth/login/forgot-password/verify': typeof AuthLoginForgotPasswordVerifyRoute
   '/vital/$userId/game/$level': typeof VitalUserIdGameLevelRoute
   '/auth/login/forgot-password': typeof AuthLoginForgotPasswordIndexRoute
@@ -229,10 +290,12 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/auth/register': typeof AuthRegisterRoute
   '/auth': typeof AuthIndexLazyRoute
+  '/auth/register/confirmation': typeof AuthRegisterConfirmationRoute
+  '/auth/register/info': typeof AuthRegisterInfoRoute
   '/vital/$userId/map': typeof VitalUserIdMapRoute
   '/auth/login': typeof AuthLoginIndexRoute
+  '/auth/register': typeof AuthRegisterIndexRoute
   '/auth/login/forgot-password/verify': typeof AuthLoginForgotPasswordVerifyRoute
   '/vital/$userId/game/$level': typeof VitalUserIdGameLevelRoute
   '/auth/login/forgot-password': typeof AuthLoginForgotPasswordIndexRoute
@@ -243,11 +306,14 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
-  '/auth/register': typeof AuthRegisterRoute
+  '/auth/register': typeof AuthRegisterRouteWithChildren
   '/auth/': typeof AuthIndexLazyRoute
+  '/auth/register/confirmation': typeof AuthRegisterConfirmationRoute
+  '/auth/register/info': typeof AuthRegisterInfoRoute
   '/vital/$userId/dashboard': typeof VitalUserIdDashboardRouteWithChildren
   '/vital/$userId/map': typeof VitalUserIdMapRoute
   '/auth/login/': typeof AuthLoginIndexRoute
+  '/auth/register/': typeof AuthRegisterIndexRoute
   '/auth/login/forgot-password/verify': typeof AuthLoginForgotPasswordVerifyRoute
   '/vital/$userId/game/$level': typeof VitalUserIdGameLevelRoute
   '/auth/login/forgot-password/': typeof AuthLoginForgotPasswordIndexRoute
@@ -261,9 +327,12 @@ export interface FileRouteTypes {
     | '/auth'
     | '/auth/register'
     | '/auth/'
+    | '/auth/register/confirmation'
+    | '/auth/register/info'
     | '/vital/$userId/dashboard'
     | '/vital/$userId/map'
     | '/auth/login'
+    | '/auth/register/'
     | '/auth/login/forgot-password/verify'
     | '/vital/$userId/game/$level'
     | '/auth/login/forgot-password'
@@ -271,10 +340,12 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/auth/register'
     | '/auth'
+    | '/auth/register/confirmation'
+    | '/auth/register/info'
     | '/vital/$userId/map'
     | '/auth/login'
+    | '/auth/register'
     | '/auth/login/forgot-password/verify'
     | '/vital/$userId/game/$level'
     | '/auth/login/forgot-password'
@@ -285,9 +356,12 @@ export interface FileRouteTypes {
     | '/auth'
     | '/auth/register'
     | '/auth/'
+    | '/auth/register/confirmation'
+    | '/auth/register/info'
     | '/vital/$userId/dashboard'
     | '/vital/$userId/map'
     | '/auth/login/'
+    | '/auth/register/'
     | '/auth/login/forgot-password/verify'
     | '/vital/$userId/game/$level'
     | '/auth/login/forgot-password/'
@@ -343,11 +417,24 @@ export const routeTree = rootRoute
     },
     "/auth/register": {
       "filePath": "auth/register.tsx",
-      "parent": "/auth"
+      "parent": "/auth",
+      "children": [
+        "/auth/register/confirmation",
+        "/auth/register/info",
+        "/auth/register/"
+      ]
     },
     "/auth/": {
       "filePath": "auth/index.lazy.tsx",
       "parent": "/auth"
+    },
+    "/auth/register/confirmation": {
+      "filePath": "auth/register/confirmation.tsx",
+      "parent": "/auth/register"
+    },
+    "/auth/register/info": {
+      "filePath": "auth/register/info.tsx",
+      "parent": "/auth/register"
     },
     "/vital/$userId/dashboard": {
       "filePath": "vital/$userId/dashboard.tsx",
@@ -361,6 +448,10 @@ export const routeTree = rootRoute
     "/auth/login/": {
       "filePath": "auth/login/index.tsx",
       "parent": "/auth"
+    },
+    "/auth/register/": {
+      "filePath": "auth/register/index.tsx",
+      "parent": "/auth/register"
     },
     "/auth/login/forgot-password/verify": {
       "filePath": "auth/login/forgot-password/verify.tsx",
