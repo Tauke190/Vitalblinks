@@ -28,7 +28,7 @@ export default {
   plugins: [
     nextui({
       layout: {
-        disabledOpacity: "0.2",
+        disabledOpacity: "0.5",
         radius: {
           small: "2px",
           medium: "6px",

@@ -58,89 +58,92 @@ function RouteComponent() {
             ...data,
             ...search
         }
-        console.log(finalData);
+
+        router.navigate({
+            to: "/auth/register/confirmation",
+            search: finalData
+        })
     }
 
     return (
         <form
             className="max-w-[420px] min-w-[320px] w-full flex flex-col gap-2.5 relative  justify-center"
             onSubmit={formMethods.handleSubmit(onSubmit)}>
-            <FormProvider {...formMethods}>
-                <Input
-                    label='First Name'
-                    placeholder='Saroj'
-                    labelPlacement='outside'
-                    {...register('first_name')}
-                    isInvalid={!!formState.errors.first_name}
-                    errorMessage={formState.errors.first_name?.message}
-                    isRequired
-                    required
-                />
+            <Input
+                label='First Name'
+                placeholder='Saroj'
+                labelPlacement='outside'
+                {...register('first_name')}
+                isInvalid={!!formState.errors.first_name}
+                errorMessage={formState.errors.first_name?.message}
+                isRequired
+                required
+            />
 
-                <Input
-                    label='Last Name'
-                    placeholder='Regmi'
-                    labelPlacement='outside'
-                    {...register('last_name')}
-                    isInvalid={!!formState.errors.last_name}
-                    errorMessage={formState.errors.last_name?.message}
-                />
+            <Input
+                label='Last Name'
+                placeholder='Regmi'
+                labelPlacement='outside'
+                {...register('last_name')}
+                isInvalid={!!formState.errors.last_name}
+                errorMessage={formState.errors.last_name?.message}
+            />
 
-                <Input
-                    label='Email'
-                    isRequired
-                    required
-                    placeholder='saroj@vitalblinks.com'
-                    labelPlacement='outside'
-                    {...register('email')}
-                    isInvalid={!!formState.errors.email}
-                    errorMessage={formState.errors.email?.message}
-                />
+            <Input
+                label='Email'
+                isRequired
+                required
+                placeholder='saroj@vitalblinks.com'
+                labelPlacement='outside'
+                {...register('email')}
+                isInvalid={!!formState.errors.email}
+                errorMessage={formState.errors.email?.message}
+            />
 
-                <PasswordInput
-                    toggleEye
-                    isRequired
-                    required
-                    label='Password'
-                    placeholder='********'
-                    labelPlacement='outside'
-                    {...register('password')}
-                    isInvalid={!!formState.errors.password}
-                    errorMessage={formState.errors.password?.message}
-                />
+            <PasswordInput
+                toggleEye
+                isRequired
+                required
+                label='Password'
+                placeholder='********'
+                labelPlacement='outside'
+                {...register('password')}
+                isInvalid={!!formState.errors.password}
+                errorMessage={formState.errors.password?.message}
+            />
 
-                <PasswordInput
-                    toggleEye
-                    label='Confirm Password'
-                    placeholder='********'
-                    labelPlacement='outside'
-                    {...register('confirm_password')}
-                    isInvalid={!!formState.errors.confirm_password}
-                    errorMessage={formState.errors.confirm_password?.message}
-                    isRequired
-                    required
-                />
+            <PasswordInput
+                toggleEye
+                label='Confirm Password'
+                placeholder='********'
+                labelPlacement='outside'
+                {...register('confirm_password')}
+                isInvalid={!!formState.errors.confirm_password}
+                errorMessage={formState.errors.confirm_password?.message}
+                isRequired
+                required
+                description={"Passwords must be at least 8 characters long."}
+            />
 
-                <div className="bottom-section mt-10 space-y-2.5">
-                    <div className="flex gap-2.5">
-                        <Button
-                            fullWidth
-                            type='reset'
-                            onClick={() => {
-                                router.navigate({
-                                    to: "/auth/register",
-                                })
-                            }}>
-                            Back
-                        </Button>
+            <div className="bottom-section mt-10 space-y-2.5">
+                <div className="flex gap-2.5">
+                    <Button
+                        fullWidth
+                        type='reset'
+                        onClick={() => {
+                            router.navigate({
+                                to: "/auth/register",
+                            })
+                        }}>
+                        Back
+                    </Button>
 
-                        <Button fullWidth color="primary" type="submit">
-                            Next
-                        </Button>
-                    </div>
+                    <Button fullWidth color="primary" type="submit">
+                        Next
+                    </Button>
                 </div>
+            </div>
 
-            </FormProvider>
         </form>
     )
 }

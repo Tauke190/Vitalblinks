@@ -40,8 +40,8 @@ function RouteComponent() {
         },
         resolver: zodResolver(firstPhaseRegSchema),
     })
+
     const { register, formState } = formMethods
-    console.log(formState.errors)
 
     const router = useRouter()
 
@@ -60,93 +60,91 @@ function RouteComponent() {
     }
 
     return (
-        <FormProvider {...formMethods}>
-            <form
-                className="max-w-[420px] min-w-[320px] w-full flex flex-col gap-2.5 relative  justify-center"
-                onSubmit={formMethods.handleSubmit(onSubmit)}
+        <form
+            className="max-w-[420px] min-w-[320px] w-full flex flex-col gap-2.5 relative  justify-center"
+            onSubmit={formMethods.handleSubmit(onSubmit)}
+        >
+            <Select
+                tabIndex={1}
+                label="Role"
+                labelPlacement="outside"
+                placeholder='user'
+                isRequired
+                {...register('role', {
+                    required: "Role is required",
+                })}
+                errorMessage={formMethods.formState.errors.role?.message}
+                isInvalid={!!formState.errors.role}
             >
-                <Select
-                    tabIndex={1}
-                    label="Role"
-                    labelPlacement="outside"
-                    placeholder='user'
-                    isRequired
-                    {...register('role', {
-                        required: "Role is required",
-                    })}
-                    errorMessage={formMethods.formState.errors.role?.message}
-                    isInvalid={!!formState.errors.role}
-                >
-                    <SelectItem key="user" >User</SelectItem>
-                    <SelectItem key="admin">Admin</SelectItem>
-                </Select>
+                <SelectItem key="user" >User</SelectItem>
+                <SelectItem key="admin">Admin</SelectItem>
+            </Select>
 
-                <Input
-                    autoFocus
-                    labelPlacement="outside"
-                    type="number"
-                    placeholder="9123123412"
-                    label="Organization Number"
-                    required
-                    isRequired
-                    {...register('organization_number', {
-                        required: "Organization Number is required",
-                        valueAsNumber: true,
-                    })}
-                    isInvalid={!!formState.errors.organization_number}
-                    errorMessage={formMethods.formState.errors.organization_number?.message}
-                />
+            <Input
+                autoFocus
+                labelPlacement="outside"
+                type="number"
+                placeholder="9123123412"
+                label="Organization Number"
+                required
+                isRequired
+                {...register('organization_number', {
+                    required: "Organization Number is required",
+                    valueAsNumber: true,
+                })}
+                isInvalid={!!formState.errors.organization_number}
+                errorMessage={formMethods.formState.errors.organization_number?.message}
+            />
 
-                {isAdmin ? (
-                    <Input
-                        labelPlacement="outside"
-                        type="number"
-                        placeholder="1234###"
-                        label="Purchase Number"
-                        required
-                        isRequired
-                        {...register('purchase_number', {
-                            required: "Purchase Number is required",
-                            valueAsNumber: true,
-                        })}
-                        errorMessage={formMethods.formState.errors.purchase_number?.message}
-                        isInvalid={!!formState.errors.purchase_number}
-                    />) : null}
-
+            {isAdmin ? (
                 <Input
                     labelPlacement="outside"
                     type="number"
-                    placeholder="102030"
-                    label="Access Code"
+                    placeholder="1234###"
+                    label="Purchase Number"
                     required
                     isRequired
-                    {...register('access_code', {
-                        required: "Access Code is required",
+                    {...register('purchase_number', {
+                        required: "Purchase Number is required",
                         valueAsNumber: true,
                     })}
-                    errorMessage={formMethods.formState.errors.access_code?.message}
-                    isInvalid={!!formState.errors.access_code}
-                />
+                    errorMessage={formMethods.formState.errors.purchase_number?.message}
+                    isInvalid={!!formState.errors.purchase_number}
+                />) : null}
 
-                <div className="bottom-section mt-10 space-y-2.5">
-                    <div className="flex gap-2.5">
-                        <Button fullWidth type='reset'>
-                            Cancel
-                        </Button>
+            <Input
+                labelPlacement="outside"
+                type="number"
+                placeholder="102030"
+                label="Access Code"
+                required
+                isRequired
+                {...register('access_code', {
+                    required: "Access Code is required",
+                    valueAsNumber: true,
+                })}
+                errorMessage={formMethods.formState.errors.access_code?.message}
+                isInvalid={!!formState.errors.access_code}
+            />
 
-                        <Button fullWidth color="primary" type="submit" >
-                            Next
-                        </Button>
-                    </div>
+            <div className="bottom-section mt-10 space-y-2.5">
+                <div className="flex gap-2.5">
+                    <Button fullWidth type='reset'>
+                        Cancel
+                    </Button>
 
-                    <div className="text-center w-full space-x-1">
-                        <span>Already have an account?</span>
-                        <Link to="/auth/login" className="text-blue-500">
-                            Login
-                        </Link>
-                    </div>
+                    <Button fullWidth color="primary" type="submit" >
+                        Next
+                    </Button>
                 </div>
-            </form>
-        </FormProvider >
+
+                <div className="text-center w-full space-x-1">
+                    <span>Already have an account?</span>
+                    <Link to="/auth/login" className="text-blue-500">
+                        Login
+                    </Link>
+                </div>
+            </div>
+        </form>
     )
 }
