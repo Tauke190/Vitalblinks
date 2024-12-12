@@ -7,27 +7,42 @@ import {
     Select,
     SelectItem,
 } from '@nextui-org/react'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 export const Route = createFileRoute('/auth/register/')({
     component: RouteComponent,
 })
 
-const registerSchema = z.object({
+export const firstPhaseRegSchema = z.object({
     role: z.enum(['user', 'admin']).default('user'),
     organization_number: z.number(),
     purchase_number: z.number().nullable(),
     access_code: z.number(),
-})
+}).refine((s) => {
+    console.log(s)
+    if (s.role === 'admin') {
+        return !!s.organization_number && !!s.purchase_number && !!s.access_code
+    }
 
-type tregisterForm = z.infer<typeof registerSchema>
+    return !!s.organization_number && !!s.access_code
+}, {
+    path: ["organization_number", "purchase_number", "access_code"],
+    message: "Invalid data found"
+});
+
+type tregisterForm = z.infer<typeof firstPhaseRegSchema>
 
 function RouteComponent() {
     const formMethods = useForm<tregisterForm>({
+        reValidateMode: "onChange",
         defaultValues: {
             role: "user",
-        }
+        },
+        resolver: zodResolver(firstPhaseRegSchema),
     })
-    const { register } = formMethods
+    const { register, formState } = formMethods
+    console.log(formState.errors)
+
     const router = useRouter()
 
     const userType = useWatch({
@@ -38,9 +53,11 @@ function RouteComponent() {
     const isAdmin = userType === "admin";
 
     const onSubmit = (data: tregisterForm) => {
-        console.log(data)
+        router.navigate({
+            to: "/auth/register/info",
+            search: { ...data }
+        })
     }
-
 
     return (
         <FormProvider {...formMethods}>
@@ -49,26 +66,33 @@ function RouteComponent() {
                 onSubmit={formMethods.handleSubmit(onSubmit)}
             >
                 <Select
+                    tabIndex={1}
                     label="Role"
                     labelPlacement="outside"
                     placeholder='user'
                     isRequired
-                    {...register('role')}
+                    {...register('role', {
+                        required: "Role is required",
+                    })}
                     errorMessage={formMethods.formState.errors.role?.message}
+                    isInvalid={!!formState.errors.role}
                 >
-                    <SelectItem key="user" >user</SelectItem>
-                    <SelectItem key="admin">admin</SelectItem>
+                    <SelectItem key="user" >User</SelectItem>
+                    <SelectItem key="admin">Admin</SelectItem>
                 </Select>
 
                 <Input
+                    autoFocus
                     labelPlacement="outside"
-                    type="text"
+                    type="number"
                     placeholder="9123123412"
                     label="Organization Number"
                     required
                     isRequired
-                    autoFocus
-                    {...register('organization_number')}
+                    {...register('organization_number', {
+                        required: "Organization Number is required",
+                    })}
+                    isInvalid={!!formState.errors.organization_number}
                     errorMessage={formMethods.formState.errors.organization_number?.message}
                 />
 
@@ -80,9 +104,11 @@ function RouteComponent() {
                         label="Purchase Number"
                         required
                         isRequired
-                        autoFocus
-                        {...register('purchase_number')}
+                        {...register('purchase_number', {
+                            required: "Purchase Number is required",
+                        })}
                         errorMessage={formMethods.formState.errors.purchase_number?.message}
+                        isInvalid={!!formState.errors.purchase_number}
                     />) : null}
 
                 <Input
@@ -92,14 +118,16 @@ function RouteComponent() {
                     label="Access Code"
                     required
                     isRequired
-                    autoFocus
-                    {...register('access_code')}
+                    {...register('access_code', {
+                        required: "Access Code is required",
+                    })}
                     errorMessage={formMethods.formState.errors.access_code?.message}
+                    isInvalid={!!formState.errors.access_code}
                 />
 
                 <div className="bottom-section mt-10 space-y-2.5">
                     <div className="flex gap-2.5">
-                        <Button fullWidth type="submit">
+                        <Button fullWidth type='reset'>
                             Cancel
                         </Button>
 

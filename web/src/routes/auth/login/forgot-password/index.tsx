@@ -14,7 +14,6 @@ export const Route = createFileRoute('/auth/login/forgot-password/')({
     validateSearch: zodSearchValidator(autoFillSchema),
 })
 
-// NOTE: was working on making the cn work for this sytle to merge.
 const GoBackPageBtn = ({
     to,
     displayName: name,
