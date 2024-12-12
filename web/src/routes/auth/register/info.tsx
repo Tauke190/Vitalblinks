@@ -4,6 +4,7 @@ import z from "zod";
 import { FormProvider, useForm } from 'react-hook-form';
 import { Button, Input } from '@nextui-org/react';
 import { zodResolver } from '@hookform/resolvers/zod'
+import PasswordInput from '@/components/form/customPasswordInput';
 
 export const Route = createFileRoute('/auth/register/info')({
     component: RouteComponent,
@@ -96,23 +97,23 @@ function RouteComponent() {
                     errorMessage={formState.errors.email?.message}
                 />
 
-                <Input
+                <PasswordInput
+                    toggleEye
                     isRequired
                     required
                     label='Password'
                     placeholder='********'
                     labelPlacement='outside'
-                    type='password'
                     {...register('password')}
                     isInvalid={!!formState.errors.password}
                     errorMessage={formState.errors.password?.message}
                 />
 
-                <Input
+                <PasswordInput
+                    toggleEye
                     label='Confirm Password'
                     placeholder='********'
                     labelPlacement='outside'
-                    type='password'
                     {...register('confirm_password')}
                     isInvalid={!!formState.errors.confirm_password}
                     errorMessage={formState.errors.confirm_password?.message}

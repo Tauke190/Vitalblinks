@@ -16,7 +16,7 @@ export const Route = createFileRoute('/auth/register/')({
 export const firstPhaseRegSchema = z.object({
     role: z.enum(['user', 'admin']).default('user'),
     organization_number: z.number(),
-    purchase_number: z.number().nullable(),
+    purchase_number: z.number().optional(),
     access_code: z.number(),
 }).refine((s) => {
     console.log(s)
@@ -91,6 +91,7 @@ function RouteComponent() {
                     isRequired
                     {...register('organization_number', {
                         required: "Organization Number is required",
+                        valueAsNumber: true,
                     })}
                     isInvalid={!!formState.errors.organization_number}
                     errorMessage={formMethods.formState.errors.organization_number?.message}
@@ -106,6 +107,7 @@ function RouteComponent() {
                         isRequired
                         {...register('purchase_number', {
                             required: "Purchase Number is required",
+                            valueAsNumber: true,
                         })}
                         errorMessage={formMethods.formState.errors.purchase_number?.message}
                         isInvalid={!!formState.errors.purchase_number}
@@ -120,6 +122,7 @@ function RouteComponent() {
                     isRequired
                     {...register('access_code', {
                         required: "Access Code is required",
+                        valueAsNumber: true,
                     })}
                     errorMessage={formMethods.formState.errors.access_code?.message}
                     isInvalid={!!formState.errors.access_code}
