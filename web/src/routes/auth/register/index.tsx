@@ -8,6 +8,9 @@ import {
     SelectItem,
 } from '@nextui-org/react'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMount } from "@brui/react-hooks"
+import { STAGES, useRegProg } from '@/hooks/useRegisterationProgress'
+import { useEffect } from 'react'
 
 export const Route = createFileRoute('/auth/register/')({
     component: RouteComponent,
@@ -58,6 +61,18 @@ function RouteComponent() {
             search: { ...data }
         })
     }
+
+    const stageStage = useRegProg();
+    useEffect(() => {
+        stageStage.setCurrentStage(STAGES[0]);
+        stageStage.setProgress(isAdmin ? 25 : 33);
+    }, [])
+
+    useEffect(() => {
+        const ProgressCount = Object.entries(formState.dirtyFields).length;
+        if (!ProgressCount) return;
+        stageStage.setProgress(ProgressCount * (isAdmin ? 25 : 33));
+    }, [JSON.stringify(formState.dirtyFields)])
 
     return (
         <form

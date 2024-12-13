@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@brui/react-hooks": "npm:@jsr/brui__react-hooks",
     "@hookform/resolvers": "^3.9.1",
     "@nextui-org/react": "2.6.8",
     "@radix-ui/react-collapsible": "^1.1.1",

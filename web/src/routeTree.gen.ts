@@ -15,7 +15,6 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRoute } from './routes/__root'
 import { Route as AuthImport } from './routes/auth'
 import { Route as IndexImport } from './routes/index'
-import { Route as AuthRegisterImport } from './routes/auth/register'
 import { Route as AuthRegisterIndexImport } from './routes/auth/register/index'
 import { Route as AuthLoginIndexImport } from './routes/auth/login/index'
 import { Route as VitalUserIdMapImport } from './routes/vital/$userId/map'
@@ -30,6 +29,7 @@ import { Route as AuthLoginForgotPasswordVerifyImport } from './routes/auth/logi
 // Create Virtual Routes
 
 const AuthIndexLazyImport = createFileRoute('/auth/')()
+const AuthRegisterLazyImport = createFileRoute('/auth/register')()
 
 // Create/Update Routes
 
@@ -51,16 +51,16 @@ const AuthIndexLazyRoute = AuthIndexLazyImport.update({
   getParentRoute: () => AuthRoute,
 } as any).lazy(() => import('./routes/auth/index.lazy').then((d) => d.Route))
 
-const AuthRegisterRoute = AuthRegisterImport.update({
+const AuthRegisterLazyRoute = AuthRegisterLazyImport.update({
   id: '/register',
   path: '/register',
   getParentRoute: () => AuthRoute,
-} as any)
+} as any).lazy(() => import('./routes/auth/register.lazy').then((d) => d.Route))
 
 const AuthRegisterIndexRoute = AuthRegisterIndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => AuthRegisterRoute,
+  getParentRoute: () => AuthRegisterLazyRoute,
 } as any)
 
 const AuthLoginIndexRoute = AuthLoginIndexImport.update({
@@ -84,13 +84,13 @@ const VitalUserIdDashboardRoute = VitalUserIdDashboardImport.update({
 const AuthRegisterInfoRoute = AuthRegisterInfoImport.update({
   id: '/info',
   path: '/info',
-  getParentRoute: () => AuthRegisterRoute,
+  getParentRoute: () => AuthRegisterLazyRoute,
 } as any)
 
 const AuthRegisterConfirmationRoute = AuthRegisterConfirmationImport.update({
   id: '/confirmation',
   path: '/confirmation',
-  getParentRoute: () => AuthRegisterRoute,
+  getParentRoute: () => AuthRegisterLazyRoute,
 } as any)
 
 const VitalUserIdDashboardIndexRoute = VitalUserIdDashboardIndexImport.update({
@@ -141,7 +141,7 @@ declare module '@tanstack/react-router' {
       id: '/auth/register'
       path: '/register'
       fullPath: '/auth/register'
-      preLoaderRoute: typeof AuthRegisterImport
+      preLoaderRoute: typeof AuthRegisterLazyImport
       parentRoute: typeof AuthImport
     }
     '/auth/': {
@@ -156,14 +156,14 @@ declare module '@tanstack/react-router' {
       path: '/confirmation'
       fullPath: '/auth/register/confirmation'
       preLoaderRoute: typeof AuthRegisterConfirmationImport
-      parentRoute: typeof AuthRegisterImport
+      parentRoute: typeof AuthRegisterLazyImport
     }
     '/auth/register/info': {
       id: '/auth/register/info'
       path: '/info'
       fullPath: '/auth/register/info'
       preLoaderRoute: typeof AuthRegisterInfoImport
-      parentRoute: typeof AuthRegisterImport
+      parentRoute: typeof AuthRegisterLazyImport
     }
     '/vital/$userId/dashboard': {
       id: '/vital/$userId/dashboard'
@@ -191,7 +191,7 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/auth/register/'
       preLoaderRoute: typeof AuthRegisterIndexImport
-      parentRoute: typeof AuthRegisterImport
+      parentRoute: typeof AuthRegisterLazyImport
     }
     '/auth/login/forgot-password/verify': {
       id: '/auth/login/forgot-password/verify'
@@ -226,24 +226,23 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
-interface AuthRegisterRouteChildren {
+interface AuthRegisterLazyRouteChildren {
   AuthRegisterConfirmationRoute: typeof AuthRegisterConfirmationRoute
   AuthRegisterInfoRoute: typeof AuthRegisterInfoRoute
   AuthRegisterIndexRoute: typeof AuthRegisterIndexRoute
 }
 
-const AuthRegisterRouteChildren: AuthRegisterRouteChildren = {
+const AuthRegisterLazyRouteChildren: AuthRegisterLazyRouteChildren = {
   AuthRegisterConfirmationRoute: AuthRegisterConfirmationRoute,
   AuthRegisterInfoRoute: AuthRegisterInfoRoute,
   AuthRegisterIndexRoute: AuthRegisterIndexRoute,
 }
 
-const AuthRegisterRouteWithChildren = AuthRegisterRoute._addFileChildren(
-  AuthRegisterRouteChildren,
-)
+const AuthRegisterLazyRouteWithChildren =
+  AuthRegisterLazyRoute._addFileChildren(AuthRegisterLazyRouteChildren)
 
 interface AuthRouteChildren {
-  AuthRegisterRoute: typeof AuthRegisterRouteWithChildren
+  AuthRegisterLazyRoute: typeof AuthRegisterLazyRouteWithChildren
   AuthIndexLazyRoute: typeof AuthIndexLazyRoute
   AuthLoginIndexRoute: typeof AuthLoginIndexRoute
   AuthLoginForgotPasswordVerifyRoute: typeof AuthLoginForgotPasswordVerifyRoute
@@ -251,7 +250,7 @@ interface AuthRouteChildren {
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
-  AuthRegisterRoute: AuthRegisterRouteWithChildren,
+  AuthRegisterLazyRoute: AuthRegisterLazyRouteWithChildren,
   AuthIndexLazyRoute: AuthIndexLazyRoute,
   AuthLoginIndexRoute: AuthLoginIndexRoute,
   AuthLoginForgotPasswordVerifyRoute: AuthLoginForgotPasswordVerifyRoute,
@@ -274,7 +273,7 @@ const VitalUserIdDashboardRouteWithChildren =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
-  '/auth/register': typeof AuthRegisterRouteWithChildren
+  '/auth/register': typeof AuthRegisterLazyRouteWithChildren
   '/auth/': typeof AuthIndexLazyRoute
   '/auth/register/confirmation': typeof AuthRegisterConfirmationRoute
   '/auth/register/info': typeof AuthRegisterInfoRoute
@@ -306,7 +305,7 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
-  '/auth/register': typeof AuthRegisterRouteWithChildren
+  '/auth/register': typeof AuthRegisterLazyRouteWithChildren
   '/auth/': typeof AuthIndexLazyRoute
   '/auth/register/confirmation': typeof AuthRegisterConfirmationRoute
   '/auth/register/info': typeof AuthRegisterInfoRoute
@@ -416,7 +415,7 @@ export const routeTree = rootRoute
       ]
     },
     "/auth/register": {
-      "filePath": "auth/register.tsx",
+      "filePath": "auth/register.lazy.tsx",
       "parent": "/auth",
       "children": [
         "/auth/register/confirmation",

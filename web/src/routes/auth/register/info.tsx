@@ -1,10 +1,13 @@
 import { createFileRoute, redirect, useRouter } from '@tanstack/react-router'
 import { firstPhaseRegSchema } from './index'
 import z from "zod";
-import { FormProvider, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { Button, Input } from '@nextui-org/react';
 import { zodResolver } from '@hookform/resolvers/zod'
 import PasswordInput from '@/components/form/customPasswordInput';
+import { useMount } from '@brui/react-hooks';
+import { STAGES, useRegProg } from '@/hooks/useRegisterationProgress';
+import { useEffect } from 'react';
 
 export const Route = createFileRoute('/auth/register/info')({
     component: RouteComponent,
@@ -51,7 +54,14 @@ function RouteComponent() {
         resolver: zodResolver(finalRegSchema),
     });
 
-    const { register, formState } = formMethods;
+    const { register, formState, getFieldState } = formMethods;
+    const setProgress = useRegProg().setProgress;
+
+    useEffect(() => {
+        const ProgressCount = Object.entries(formState.dirtyFields).length;
+        if (!ProgressCount) return;
+        setProgress(ProgressCount * 20);
+    }, [JSON.stringify(formState.dirtyFields)])
 
     const onSubmit = (data: tfinalRegForm) => {
         const finalData = {
@@ -65,10 +75,16 @@ function RouteComponent() {
         })
     }
 
+    const stageStage = useRegProg();
+    useEffect(() => {
+        stageStage.setCurrentStage(STAGES[1]);
+    }, [])
+
     return (
         <form
             className="max-w-[420px] min-w-[320px] w-full flex flex-col gap-2.5 relative  justify-center"
-            onSubmit={formMethods.handleSubmit(onSubmit)}>
+            onSubmit={formMethods.handleSubmit(onSubmit)}
+        >
             <Input
                 label='First Name'
                 placeholder='Saroj'

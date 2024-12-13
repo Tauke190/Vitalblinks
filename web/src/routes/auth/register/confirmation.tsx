@@ -2,7 +2,8 @@ import { createFileRoute } from '@tanstack/react-router'
 import { InputOtp } from "@nextui-org/react";
 import { useForm, Controller } from "react-hook-form";
 import { Button } from "@nextui-org/react";
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { STAGES, useRegProg } from '@/hooks/useRegisterationProgress';
 
 export const Route = createFileRoute('/auth/register/confirmation')({
     component: RouteComponent,
@@ -16,6 +17,7 @@ function RouteComponent() {
     const {
         handleSubmit,
         control,
+        watch,
         formState: { errors },
     } = useForm<tconfirmationForm>({
         defaultValues: {
@@ -23,6 +25,9 @@ function RouteComponent() {
         },
     });
     const [rerequestTime, setRerequestTime] = useState(60);
+    const verificationCode = watch("verification_code");
+
+    const codelength = String(verificationCode).length;
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -50,6 +55,18 @@ function RouteComponent() {
         if (isRerequestDisabled) return;
         setRerequestTime(60);
     }
+
+    const stageStage = useRegProg();
+    useEffect(() => {
+        stageStage.setCurrentStage(STAGES[2]);
+        stageStage.setProgress(0);
+    }, [])
+
+    useMemo(() => {
+        const progress = Math.floor(codelength * (100 / 6));
+        stageStage.setProgress(progress);
+    }, [codelength])
+
 
     return (
         <form
