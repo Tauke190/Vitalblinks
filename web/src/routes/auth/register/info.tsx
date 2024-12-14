@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import PasswordInput from '@/components/form/customPasswordInput';
 import { STAGES, useRegProg } from '@/hooks/useRegisterationProgress';
 import { useEffect } from 'react';
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 export const Route = createFileRoute('/auth/register/info')({
     component: RouteComponent,
@@ -54,7 +54,7 @@ function RouteComponent() {
         resolver: zodResolver(finalRegSchema),
     });
 
-    const { register, formState } = formMethods;
+    const { register, formState, setError } = formMethods;
     const setProgress = useRegProg().setProgress;
 
     useEffect(() => {
@@ -80,7 +80,15 @@ function RouteComponent() {
                 })
             }
         }).catch((err) => {
-            console.error(err);
+            if (err instanceof AxiosError) {
+                const errorMessages = err.response?.data.message;
+
+                if (err.status === 409)
+                    setError("email", {
+                        message: errorMessages,
+                        type: "server"
+                    })
+            }
         })
     }
 

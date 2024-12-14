@@ -43,10 +43,11 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 
 	// checking user existence before registration
 	var existingUser models.User
-	err = userCollection.FindOne(ctx, bson.M{"email": user.UserInfo.Email}).Decode(&existingUser)
+	userCollection.FindOne(ctx, bson.M{"userinfo.email": user.UserInfo.Email}).Decode(&existingUser)
 
-	if err == nil {
-		http.Error(w, "User already exists", http.StatusBadRequest)
+	if existingUser.UserInfo.Email != "" {
+		w.WriteHeader(http.StatusConflict)
+		json.NewEncoder(w).Encode(map[string]string{"message": "User already exists"})
 		return
 	}
 
@@ -90,6 +91,7 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	json.NewEncoder(w).Encode(responseData)
+	return
 }
 
 func LoginUser(w http.ResponseWriter, r *http.Request) {
@@ -117,12 +119,34 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if existingUser.Password != user.Password {
-		http.Error(w, "Invalid password", http.StatusBadRequest)
+	// comparing the password
+	correctPassword := utils.ComparePassword(existingUser.UserInfo.Password, user.UserInfo.Password)
+	if !correctPassword {
+		json.NewEncoder(w).Encode(map[string]string{"message": "Invalid credentials"})
 		return
 	}
 
+	// generating a jwt token
+	token, err := utils.GenerateJwtToken(user, nil)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	cookies := &http.Cookie{
+		Name:     "auth_token",
+		Value:    token,
+		SameSite: http.SameSiteStrictMode,
+		Expires:  time.Now().Add(24 * time.Hour),
+		Secure:   true,
+		HttpOnly: true,
+	}
+
+	http.SetCookie(w, cookies)
+
 	json.NewEncoder(w).Encode(existingUser)
+	return
 }
 
 func ForgotPassword(w http.ResponseWriter, r *http.Request) {
