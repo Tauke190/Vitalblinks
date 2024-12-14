@@ -10,6 +10,7 @@ type userInfo struct {
 	Role                string             `bson:"role,omitempty"` // TODO: create a emum instead
 	Organization_number string             `bson:"organization_number,omitempty"`
 	Access_code         string             `bson:"access_code,omitempty"`
+	Verified            bool               `bson:"verified,omitempty"`
 }
 
 type adminDetails struct {

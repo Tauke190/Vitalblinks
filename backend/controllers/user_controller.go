@@ -15,6 +15,12 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
+type UnverifiedUser struct {
+	Email  string `json:"email"`
+	Role   string `json:"role"`
+	Status string `json:"status"`
+}
+
 func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	var userCollection = config.DB.Collection("users")
 
@@ -53,7 +59,25 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// since while creation no user is verified
+	user.Verified = false
 	// generating a jwt token
+	token, err := utils.GenerateJwtToken(user, nil)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	cookies := &http.Cookie{
+		Name:     "auth_token",
+		Value:    token,
+		SameSite: http.SameSiteStrictMode,
+		Expires:  time.Now().Add(24 * time.Hour),
+		Secure:   true,
+		HttpOnly: true,
+	}
+	http.SetCookie(w, cookies)
 
 	json.NewEncoder(w).Encode(user)
 }
