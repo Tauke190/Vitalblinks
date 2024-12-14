@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import PasswordInput from '@/components/form/customPasswordInput';
 import { STAGES, useRegProg } from '@/hooks/useRegisterationProgress';
 import { useEffect } from 'react';
+import axios from "axios";
 
 export const Route = createFileRoute('/auth/register/info')({
     component: RouteComponent,
@@ -17,7 +18,7 @@ export const Route = createFileRoute('/auth/register/info')({
         s.role = s.role || 'user'
         s.organization_number = parseInt(s.organization_number as string) || 0
         s.purchase_number = parseInt(s.purchase_number as string) || 0
-        s.access_code = parseInt(s.access_code as string) || 0
+        s.access_code = s.access_code as string
 
         const parsedSearch = firstPhaseRegSchema.safeParse(s);
 
@@ -67,10 +68,19 @@ function RouteComponent() {
             ...data,
             ...search
         }
+        const registerationUrl = "http://127.0.0.1:3001/auth/register";
 
-        router.navigate({
-            to: "/auth/register/confirmation",
-            search: finalData
+        const response = axios.post(registerationUrl, finalData)
+
+        response.then((res) => {
+            console.log(res.data)
+            if (res.status === 200) {
+                router.navigate({
+                    to: "/auth/register/confirmation",
+                })
+            }
+        }).catch((err) => {
+            console.error(err);
         })
     }
 

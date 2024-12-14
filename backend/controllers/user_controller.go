@@ -3,8 +3,6 @@ package controllers
 import (
 	"context"
 	"encoding/json"
-	"fmt"
-	"log"
 	"net/http"
 	"time"
 
@@ -22,6 +20,11 @@ type UnverifiedUser struct {
 }
 
 func RegisterUser(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
 	var userCollection = config.DB.Collection("users")
 
 	w.Header().Set("Content-Type", "application/json")
@@ -29,6 +32,7 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	// getting the user data from the request body
 	var user models.User
 	err := json.NewDecoder(r.Body).Decode(&user)
+
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -39,7 +43,7 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 
 	// checking user existence before registration
 	var existingUser models.User
-	err = userCollection.FindOne(ctx, bson.M{"email": user.Email}).Decode(&existingUser)
+	err = userCollection.FindOne(ctx, bson.M{"email": user.UserInfo.Email}).Decode(&existingUser)
 
 	if err == nil {
 		http.Error(w, "User already exists", http.StatusBadRequest)
@@ -47,7 +51,7 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// hashing the password before storing it in the database
-	user.Password, err = utils.HashPassword(user.Password)
+	user.UserInfo.Password, err = utils.HashPassword(user.UserInfo.Password)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -60,7 +64,7 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// since while creation no user is verified
-	user.Verified = false
+	user.UserInfo.Verified = false
 	// generating a jwt token
 	token, err := utils.GenerateJwtToken(user, nil)
 
@@ -77,9 +81,15 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 		Secure:   true,
 		HttpOnly: true,
 	}
+
 	http.SetCookie(w, cookies)
 
-	json.NewEncoder(w).Encode(user)
+	responseData := map[string]interface{}{
+		"email":    user.UserInfo.Email,
+		"verified": user.UserInfo.Verified,
+	}
+
+	json.NewEncoder(w).Encode(responseData)
 }
 
 func LoginUser(w http.ResponseWriter, r *http.Request) {
@@ -100,7 +110,7 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 
 	// checking user existence before login
 	var existingUser models.User
-	err = userCollection.FindOne(ctx, bson.M{"email": user.Email}).Decode(&existingUser)
+	err = userCollection.FindOne(ctx, bson.M{"email": user.UserInfo.Email}).Decode(&existingUser)
 
 	if err != nil {
 		http.Error(w, "User not found", http.StatusBadRequest)

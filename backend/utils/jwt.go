@@ -15,6 +15,13 @@ func GenerateJwtToken(data any, options *topions) (string, error) {
 	defaultSecret := os.Getenv("JWT_SECRET")
 	defaultTime := 24 * time.Hour
 
+	if options == nil {
+		options = &topions{
+			time:   &defaultTime,
+			secret: &defaultSecret,
+		}
+	}
+
 	if options.secret == nil {
 		options.secret = &defaultSecret
 	}

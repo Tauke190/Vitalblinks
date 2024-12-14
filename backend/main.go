@@ -7,6 +7,7 @@ import (
 	"os"
 	"time"
 	"vitalblinks-server/config"
+	"vitalblinks-server/middlewares"
 	"vitalblinks-server/routes"
 
 	"github.com/gorilla/mux"
@@ -23,6 +24,10 @@ func main() {
 	config.ConnectDB()
 
 	router := mux.NewRouter()
+
+	// handling the cors middleware
+	router.Use(middlewares.HandleCors)
+
 	// handeling the routing portion
 	http.Handle("/", router)
 

@@ -19,7 +19,7 @@ export const firstPhaseRegSchema = z.object({
     role: z.enum(['user', 'admin']).default('user'),
     organization_number: z.number(),
     purchase_number: z.number().optional(),
-    access_code: z.number(),
+    access_code: z.string(),
 }).refine((s) => {
     if (s.role === 'admin') {
         return !!s.organization_number && !!s.purchase_number && !!s.access_code
@@ -38,6 +38,7 @@ function RouteComponent() {
         reValidateMode: "onChange",
         defaultValues: {
             role: "user",
+            purchase_number: undefined,
         },
         resolver: zodResolver(firstPhaseRegSchema),
     })
@@ -135,14 +136,13 @@ function RouteComponent() {
 
             <Input
                 labelPlacement="outside"
-                type="number"
+                type="text"
                 placeholder="102030"
                 label="Access Code"
                 required
                 isRequired
                 {...register('access_code', {
                     required: "Access Code is required",
-                    valueAsNumber: true,
                 })}
                 errorMessage={formMethods.formState.errors.access_code?.message}
                 isInvalid={!!formState.errors.access_code}
