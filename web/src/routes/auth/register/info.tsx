@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form';
 import { Button, Input } from '@nextui-org/react';
 import { zodResolver } from '@hookform/resolvers/zod'
 import PasswordInput from '@/components/form/customPasswordInput';
-import { useMount } from '@brui/react-hooks';
 import { STAGES, useRegProg } from '@/hooks/useRegisterationProgress';
 import { useEffect } from 'react';
 
@@ -54,7 +53,7 @@ function RouteComponent() {
         resolver: zodResolver(finalRegSchema),
     });
 
-    const { register, formState, getFieldState } = formMethods;
+    const { register, formState } = formMethods;
     const setProgress = useRegProg().setProgress;
 
     useEffect(() => {

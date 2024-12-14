@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
 import z from 'zod'
-import { FormProvider, useForm, useWatch } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import {
     Button,
     Input,
@@ -8,7 +8,6 @@ import {
     SelectItem,
 } from '@nextui-org/react'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMount } from "@brui/react-hooks"
 import { STAGES, useRegProg } from '@/hooks/useRegisterationProgress'
 import { useEffect } from 'react'
 
@@ -22,7 +21,6 @@ export const firstPhaseRegSchema = z.object({
     purchase_number: z.number().optional(),
     access_code: z.number(),
 }).refine((s) => {
-    console.log(s)
     if (s.role === 'admin') {
         return !!s.organization_number && !!s.purchase_number && !!s.access_code
     }
@@ -58,7 +56,9 @@ function RouteComponent() {
     const onSubmit = (data: tregisterForm) => {
         router.navigate({
             to: "/auth/register/info",
-            search: { ...data }
+            search: {
+                ...data
+            }
         })
     }
 
@@ -68,11 +68,16 @@ function RouteComponent() {
         stageStage.setProgress(isAdmin ? 25 : 33);
     }, [])
 
+    const fields = useWatch({
+        control: formMethods.control,
+    })
+
     useEffect(() => {
-        const ProgressCount = Object.entries(formState.dirtyFields).length;
-        if (!ProgressCount) return;
-        stageStage.setProgress(ProgressCount * (isAdmin ? 25 : 33));
-    }, [JSON.stringify(formState.dirtyFields)])
+        // I am adding 1 if it is not admin because default value is not being marked as dirty.
+        const progressCount = Math.min(Object.entries(formState.dirtyFields).length + (!formState.dirtyFields.role ? 1 : 0), isAdmin ? 4 : 3);
+
+        stageStage.setProgress(Math.ceil(progressCount * (isAdmin ? 25 : 33.33)));
+    }, [fields, isAdmin])
 
     return (
         <form
@@ -90,8 +95,9 @@ function RouteComponent() {
                 })}
                 errorMessage={formMethods.formState.errors.role?.message}
                 isInvalid={!!formState.errors.role}
+                defaultSelectedKeys={['user']}
             >
-                <SelectItem key="user" >User</SelectItem>
+                <SelectItem key="user">User</SelectItem>
                 <SelectItem key="admin">Admin</SelectItem>
             </Select>
 

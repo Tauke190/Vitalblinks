@@ -1,4 +1,4 @@
-import { REGISTERATION_STAGES, STAGES, StageToNumberMap, useRegProg } from '@/hooks/useRegisterationProgress'
+import { STAGES, useRegProg } from '@/hooks/useRegisterationProgress'
 import { cn } from '@/lib/utils'
 import { CircularProgress, Progress } from '@nextui-org/react'
 import { createLazyFileRoute, Outlet } from '@tanstack/react-router'
@@ -9,15 +9,21 @@ export const Route = createLazyFileRoute('/auth/register')({
 })
 
 function RegisterPage() {
+    const stageState = useRegProg();
+
     return (
         <section
             id="registerationSection"
             className="w-full h-screen py-5 flex justify-center flex-col gap-5"
         >
-            <div className="greetings mb-10">
-                <h2 className="font-bold text-xl">Welcome to Vitalblinks.</h2>
-                <p className="text-gray-400">Your virtual business trainner.</p>
-            </div>
+            {
+                stageState.currentStage.sn === 1 &&
+                <div className="greetings mb-10">
+                    <h2 className="font-bold text-xl">Welcome to Vitalblinks.</h2>
+                    <p className="text-gray-400">Your virtual business trainner.</p>
+                </div>
+            }
+
             <RegisterationStage />
 
             <Outlet />
