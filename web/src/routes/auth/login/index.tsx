@@ -1,5 +1,6 @@
 import { Button, Checkbox, Input } from '@nextui-org/react'
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
+import axios from 'axios'
 import { FormProvider, useForm } from 'react-hook-form'
 
 export const Route = createFileRoute('/auth/login/')({
@@ -13,31 +14,47 @@ type tloginForm = {
 
 function LoginPage() {
     const formMethods = useForm<tloginForm>();
-    const { register, reset } = formMethods;
+    const { register, reset, setError } = formMethods;
 
     const router = useRouter();
 
     const onSubmit = (data: tloginForm) => {
-        console.log(data)
-        fetch('http://localhost:3001/user/login',
-            {
-                method: 'POST',
-                body: JSON.stringify(data)
-            }).then(res => {
-                if (res.ok) {
-                    reset();
-                    return res.json()
+        const response = axios.post('http://localhost:3001/auth/login', data);
+
+        response.then(() => {
+            reset();
+
+            // TODO: Remove the userid as it's not necessary
+            router.navigate({
+                to: '/vital/$userId/dashboard',
+                params: {
+                    userId: "saroj"
                 }
-                throw new Error('Response not ok')
-            }).then(data => {
-                router.navigate({
-                    to: "/vital/$userId/dashboard",
-                    params: {
-                        userId: data.id
-                    }
-                })
-                reset()
-            })
+            });
+
+        }).catch((err) => {
+            if (err instanceof axios.AxiosError) {
+                if (err.status === 404) {
+                    setError('email', {
+                        message: 'Invalid email or password',
+                        type: 'server'
+                    })
+                }
+
+                if (err.status === 403) {
+                    setError('email', {
+                        message: 'Invalid email or password',
+                        type: 'server'
+                    })
+
+                    setError('password', {
+                        message: 'Invalid email or password',
+                        type: 'server'
+                    })
+
+                }
+            }
+        })
     }
 
     return (
@@ -57,6 +74,8 @@ function LoginPage() {
                     required
                     isRequired
                     autoFocus
+                    isInvalid={!!formMethods.formState.errors.email}
+                    errorMessage={formMethods.formState.errors.email?.message}
                     {...register('email')}
                 />
 
@@ -67,6 +86,8 @@ function LoginPage() {
                     label="Password"
                     required
                     isRequired
+                    isInvalid={!!formMethods.formState.errors.password}
+                    errorMessage={formMethods.formState.errors.password?.message}
                     {...register('password')}
                 />
 
@@ -79,7 +100,6 @@ function LoginPage() {
                         <Link
                             to='/auth/login/forgot-password'
                             className="forgotPassword text-gray-300 underline underline-offset-3">
-
                             Forgot Password ?
                         </Link>
                     </div>

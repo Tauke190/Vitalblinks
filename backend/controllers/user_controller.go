@@ -11,6 +11,7 @@ import (
 	"vitalblinks-server/utils"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type UnverifiedUser struct {
@@ -43,9 +44,9 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 
 	// checking user existence before registration
 	var existingUser models.User
-	userCollection.FindOne(ctx, bson.M{"userinfo.email": user.UserInfo.Email}).Decode(&existingUser)
+	err = userCollection.FindOne(ctx, bson.M{"userinfo.email": user.UserInfo.Email}).Decode(&existingUser)
 
-	if existingUser.UserInfo.Email != "" {
+	if err == nil {
 		w.WriteHeader(http.StatusConflict)
 		json.NewEncoder(w).Encode(map[string]string{"message": "User already exists"})
 		return
@@ -100,8 +101,14 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	// getting the user data from the request body
-	var user models.User
-	err := json.NewDecoder(r.Body).Decode(&user)
+	type requestUserType struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+
+	requestUser := requestUserType{}
+
+	err := json.NewDecoder(r.Body).Decode(&requestUser)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -112,22 +119,29 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 
 	// checking user existence before login
 	var existingUser models.User
-	err = userCollection.FindOne(ctx, bson.M{"email": user.UserInfo.Email}).Decode(&existingUser)
+	err = userCollection.FindOne(ctx, bson.M{"userinfo.email": requestUser.Email}).Decode(&existingUser)
 
 	if err != nil {
-		http.Error(w, "User not found", http.StatusBadRequest)
+		if err == mongo.ErrNoDocuments {
+			w.WriteHeader(http.StatusNotFound)
+			json.NewEncoder(w).Encode(map[string]string{"message": "User not found"})
+			return
+		}
+
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	// comparing the password
-	correctPassword := utils.ComparePassword(existingUser.UserInfo.Password, user.UserInfo.Password)
+	correctPassword := utils.ComparePassword(existingUser.UserInfo.Password, requestUser.Password)
 	if !correctPassword {
+		w.WriteHeader(http.StatusForbidden)
 		json.NewEncoder(w).Encode(map[string]string{"message": "Invalid credentials"})
 		return
 	}
 
 	// generating a jwt token
-	token, err := utils.GenerateJwtToken(user, nil)
+	token, err := utils.GenerateJwtToken(existingUser, nil)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -144,8 +158,9 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.SetCookie(w, cookies)
-
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(existingUser)
+
 	return
 }
 
