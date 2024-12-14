@@ -12,11 +12,11 @@ type userInfo struct {
 	Access_code         string             `bson:"access_code,omitempty"`
 }
 
-type adminUser struct {
-	purchase_number int `bson:"purchase_number,omitempty"`
+type adminDetails struct {
+	Purchase_number int `bson:"purchase_number,omitempty"`
 }
 
 type User struct {
 	userInfo
-	adminUser
+	adminDetails
 }

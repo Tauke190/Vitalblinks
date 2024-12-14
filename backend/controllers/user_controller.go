@@ -3,11 +3,14 @@ package controllers
 import (
 	"context"
 	"encoding/json"
+	"fmt"
+	"log"
 	"net/http"
 	"time"
 
 	"vitalblinks-server/config"
 	"vitalblinks-server/models"
+	"vitalblinks-server/utils"
 
 	"go.mongodb.org/mongo-driver/bson"
 )
@@ -37,13 +40,20 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: Implement a hashing function
-	// user.Password = hash(user.Password)
+	// hashing the password before storing it in the database
+	user.Password, err = utils.HashPassword(user.Password)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	_, err = userCollection.InsertOne(ctx, user)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	// generating a jwt token
 
 	json.NewEncoder(w).Encode(user)
 }
