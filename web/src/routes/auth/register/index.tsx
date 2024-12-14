@@ -55,6 +55,9 @@ function RouteComponent() {
     const isAdmin = userType === "admin";
 
     const onSubmit = (data: tregisterForm) => {
+        if (!isAdmin)
+            data.purchase_number = undefined;
+
         router.navigate({
             to: "/auth/register/info",
             search: {

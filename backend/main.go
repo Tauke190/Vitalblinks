@@ -31,8 +31,15 @@ func main() {
 	// handeling the routing portion
 	http.Handle("/", router)
 
+	// handling the user auth routes
+	routes.AuthRoutes(router)
+
+	// creating a authenticated route
+	authenticatedRouter := router.NewRoute().Subrouter()
+	authenticatedRouter.Use(middlewares.CheckAuth)
+
 	// handling the user routes
-	routes.UserRoutes(router)
+	routes.UserRoutes(authenticatedRouter)
 
 	port := os.Getenv("PORT")
 

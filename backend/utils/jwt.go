@@ -61,8 +61,8 @@ func VerifyJwtToken(tokenString string, options *topions) (jwt.MapClaims, error)
 	return claims, nil
 }
 
-func IsVerified(tokenString string, options *topions) bool {
-	claims, err := VerifyJwtToken(tokenString, options)
+func IsVerified(tokenString string) bool {
+	claims, err := VerifyJwtToken(tokenString, nil)
 
 	if err != nil {
 		return false
@@ -73,4 +73,14 @@ func IsVerified(tokenString string, options *topions) bool {
 	}
 
 	return false
+}
+
+func ExtractJWTInfo(token string) (map[string]interface{}, error) {
+	claims, err := VerifyJwtToken(token, nil)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return claims, nil
 }
